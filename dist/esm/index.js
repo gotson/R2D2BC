@@ -13505,7 +13505,7 @@ var require_parse = __commonJS({
       try {
         parser.parse();
       } catch (e) {
-        if (false) {
+        if (true) {
           if (e.name === "CssSyntaxError" && opts && opts.from) {
             if (/\.scss$/i.test(opts.from)) {
               e.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
@@ -13697,7 +13697,7 @@ var require_lazy_result = __commonJS({
             error.plugin = plugin.postcssPlugin;
             error.setMessage();
           } else if (plugin.postcssVersion) {
-            if (false) {
+            if (true) {
               let pluginName = plugin.postcssPlugin;
               let pluginVer = plugin.postcssVersion;
               let runtimeVer = this.result.processor.version;
@@ -13882,7 +13882,7 @@ var require_lazy_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (false) {
+        if (true) {
           if (!("from" in this.opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14077,7 +14077,7 @@ var require_no_work_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (false) {
+        if (true) {
           if (!("from" in this._opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14166,7 +14166,7 @@ var require_processor = __commonJS({
           } else if (typeof i === "function") {
             normalized.push(i);
           } else if (typeof i === "object" && (i.parse || i.stringify)) {
-            if (false) {
+            if (true) {
               throw new Error(
                 "PostCSS syntaxes cannot be used as plugins. Instead, please use one of the syntax/parser/stringifier options as outlined in your PostCSS runner documentation."
               );
@@ -50843,9 +50843,10 @@ var Publication = class extends import_publication.Publication {
     if (((_a = this.sample) == null ? void 0 : _a.isSampleRead) && ((_b = this.positions) == null ? void 0 : _b.length) > 0) {
       return this.limitedTOC();
     }
-    return this.TOC;
+    return this.TOC || [];
   }
   limitedTOC() {
+    var _a;
     function disableChildren(item) {
       for (let index2 = 0; index2 < item.Children.length; index2++) {
         let child = item.Children[index2];
@@ -50855,8 +50856,8 @@ var Publication = class extends import_publication.Publication {
         }
       }
     }
-    let toc = this.TOC.map((item) => {
-      var _a, _b;
+    let toc = (_a = this.TOC) == null ? void 0 : _a.map((item) => {
+      var _a2, _b;
       if (item.Href) {
         const positions = this.positionsByHref(this.getRelativeHref(item.Href));
         if ((positions == null ? void 0 : positions.length) > 0) {
@@ -50864,7 +50865,7 @@ var Publication = class extends import_publication.Publication {
           let progress = Math.round(
             (locator.locations.totalProgression ? locator.locations.totalProgression : 0) * 100
           );
-          if ((_a = this.sample) == null ? void 0 : _a.limit) {
+          if ((_a2 = this.sample) == null ? void 0 : _a2.limit) {
             let valid = progress <= ((_b = this.sample) == null ? void 0 : _b.limit);
             if (!valid) {
               item.Href = void 0;
@@ -50877,7 +50878,7 @@ var Publication = class extends import_publication.Publication {
       }
       return item;
     });
-    return toc;
+    return toc || [];
   }
   get landmarks() {
     return this.Landmarks;
@@ -60295,7 +60296,7 @@ function delay(t, v) {
     setTimeout(resolve.bind(null, v), t);
   });
 }
-var IS_DEV = false;
+var IS_DEV = true;
 import_loglevel13.default.setLevel(IS_DEV ? "trace" : "warn", true);
 
 // src/modules/protection/ContentProtectionModule.ts
@@ -68237,6 +68238,9 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
   landmarks() {
     return this.publication.landmarks;
   }
+  pageList() {
+    return this.publication.pageList;
+  }
   readingOrder() {
     return this.publication.readingOrder;
   }
@@ -70031,6 +70035,8 @@ var PDFNavigator = class extends eventemitter3_default {
   }
   landmarks() {
   }
+  pageList() {
+  }
   //TODO:
   currentResource() {
   }
@@ -70578,18 +70584,33 @@ var D2Reader = class _D2Reader {
         initialConfig.requestConfig
       );
     }
-    const store = new LocalStorageStore({
-      prefix: publication.manifestUrl,
-      useLocalStorage: initialConfig.useLocalStorage ?? false
-    });
-    const settingsStore = new LocalStorageStore({
-      prefix: "r2d2bc-reader",
-      useLocalStorage: initialConfig.useLocalStorage ?? false
-    });
-    const layerStore = new LocalStorageStore({
-      prefix: "r2d2bc-layers",
-      useLocalStorage: initialConfig.useLocalStorage ?? false
-    });
+    let store;
+    if (initialConfig.storageType === "memory") {
+      store = new MemoryStore();
+    } else {
+      store = new LocalStorageStore({
+        prefix: publication.manifestUrl,
+        useLocalStorage: initialConfig.useLocalStorage ?? false
+      });
+    }
+    let settingsStore;
+    if (initialConfig.storageType === "memory") {
+      settingsStore = new MemoryStore();
+    } else {
+      settingsStore = new LocalStorageStore({
+        prefix: "r2d2bc-reader",
+        useLocalStorage: initialConfig.useLocalStorage ?? false
+      });
+    }
+    let layerStore;
+    if (initialConfig.storageType === "memory") {
+      layerStore = new MemoryStore();
+    } else {
+      layerStore = new LocalStorageStore({
+        prefix: "r2d2bc-layers",
+        useLocalStorage: initialConfig.useLocalStorage ?? false
+      });
+    }
     const annotator = new LocalAnnotator({ store });
     publication.sample = initialConfig.sample;
     rights = updateConfig(rights, publication);
@@ -70793,6 +70814,10 @@ var D2Reader = class _D2Reader {
   /** Landmarks */
   get landmarks() {
     return convertAndCamel(this.navigator.landmarks()) ?? [];
+  }
+  /** Page List */
+  get pageList() {
+    return convertAndCamel(this.navigator.pageList()) ?? [];
   }
   /** Reading Order or Spine */
   get readingOrder() {

@@ -46,6 +46,7 @@ export declare class PDFNavigator extends EventEmitter implements Navigator {
     readingOrder(): any;
     tableOfContents(): any;
     landmarks(): any;
+    pageList(): any;
     currentResource(): any;
     totalResources(): any;
     currentLocator(): any;

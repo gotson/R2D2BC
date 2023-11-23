@@ -99,6 +99,8 @@ export default class D2Reader {
     get tableOfContents(): any;
     /** Landmarks */
     get landmarks(): any;
+    /** Page List */
+    get pageList(): any;
     /** Reading Order or Spine */
     get readingOrder(): any;
     /** Current Bookmarks */

@@ -127,6 +127,7 @@ export interface ReaderConfig {
     injectables: Array<Injectable>;
     injectablesFixed?: Array<Injectable>;
     useLocalStorage?: boolean;
+    storageType?: string;
     attributes?: IFrameAttributes;
     services?: PublicationServices;
     sample?: SampleRead;
@@ -246,6 +247,7 @@ export declare class IFrameNavigator extends EventEmitter implements Navigator {
     currentLink(): Array<Link | undefined>;
     tableOfContents(): any;
     landmarks(): any;
+    pageList(): any;
     readingOrder(): any;
     atStart(): boolean;
     atEnd(): boolean;
