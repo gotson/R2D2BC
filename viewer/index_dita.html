@@ -769,7 +769,7 @@
             // fontFamily: "serif", //Original, serif, sans-serif
             // textAlignment: "start", //"auto", "justify", "start"
             // columnCount: "1", // "auto", "1", "2"
-            // verticalScroll: "readium-scroll-off", //readium-scroll-on, readium-scroll-off,
+            verticalScroll: "readium-scroll-off", //readium-scroll-on, readium-scroll-off,
             // fontSize: 300,
             // wordSpacing: 4.0,
             // letterSpacing: 4.0,
@@ -1371,8 +1371,8 @@
             injectables: injectables,
             injectablesFixed: [],
             userSettings: userSettings,
-            useLocalStorage: true, // true = uses local storage, false = uses session storage (default)
-            storageType: "local", // 'memory' = uses a memory storage, anything else = uses local/session storage (default)
+            useLocalStorage: false, // true = uses local storage, false = uses session storage (default)
+            storageType: "memory", // 'memory' = uses a memory storage, anything else = uses local/session storage (default)
         }).then(instance => {
             console.log("D2reader instance ready", instance);
             d2reader = instance;
