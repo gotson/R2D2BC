@@ -1,0 +1,22 @@
+export declare const WIDTH_ATTR: number;
+export declare const HEIGHT_ATTR: number;
+export declare const VIEWBOX_ATTR: string;
+export declare const iconTemplateColored: (id: string, title: string, path: string, classAttr: string | undefined, size: number, fill: string) => string;
+export declare const icons: {
+    error: string;
+    home: string;
+    expand: string;
+    loading: string;
+    next: string;
+    previous: string;
+    settings: string;
+    toc: string;
+    bookmarks: string;
+    bookmark: string;
+    delete: string;
+    close: string;
+    text: string;
+    speak: string;
+    note: string;
+    highlight: string;
+};
