@@ -63972,8 +63972,8 @@ var readerError = `
     ${icons.error}
     </span>
     <span>There was an error loading this page.</span>
-    <button class="go-back">Go back</button>
-    <button class="try-again">Try again</button>
+    <button id="r2d2bc-go-back">Go back</button>
+    <button id="r2d2bc-try-again">Try again</button>
 `;
 
 // src/navigator/IFrameNavigator.ts
@@ -66869,37 +66869,31 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       }
       this.tryAgainButton = findElement(
         mainElement,
-        "button[class=try-again]"
+        "#r2d2bc-try-again"
       );
       this.goBackButton = findElement(
         mainElement,
-        "button[class=go-back]"
+        "#r2d2bc-go-back"
       );
-      this.infoTop = findElement(
-        mainElement,
-        "div[class='info top']"
-      );
-      this.infoBottom = findElement(
-        mainElement,
-        "div[class='info bottom']"
-      );
+      this.infoTop = findElement(mainElement, "#reader-info-top") || findElement(mainElement, "div[class='info top']");
+      this.infoBottom = findElement(mainElement, "#reader-info-bottom") || findElement(mainElement, "div[class='info bottom']");
       if (this.headerMenu)
         this.bookTitle = findElement(
           this.headerMenu,
           "#book-title"
         );
       if (this.infoBottom)
-        this.chapterTitle = findElement(
+        this.chapterTitle = findElement(this.infoBottom, "#chapter-title") || findElement(
           this.infoBottom,
           "span[class=chapter-title]"
         );
       if (this.infoBottom)
-        this.chapterPosition = findElement(
+        this.chapterPosition = findElement(this.infoBottom, "#chapter-position") || findElement(
           this.infoBottom,
           "span[class=chapter-position]"
         );
       if (this.infoBottom)
-        this.remainingPositions = findElement(
+        this.remainingPositions = findElement(this.infoBottom, "#remaining-positions") || findElement(
           this.infoBottom,
           "span[class=remaining-positions]"
         );
@@ -69944,7 +69938,7 @@ var PDFNavigator = class extends eventemitter3_default {
     loadingMessage.style.alignItems = "center";
     loadingMessage.style.justifyContent = "center";
     loadingMessage.style.background = "white";
-    loadingMessage.className = "loading is-loading";
+    loadingMessage.className = "r2d2bc-loading is-loading";
     this.pdfContainer.appendChild(loadingMessage);
     (0, import_pdfjs_dist.getDocument)(
       this.publication.getAbsoluteHref(this.resource.Href)
