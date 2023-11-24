@@ -1364,6 +1364,9 @@
                         );
                     });
                 },
+                keydownFallthrough: function(event) {
+                    console.log("api.keydownFallthrough:" + event.key);
+                },
                 onError: function(error) {
                     console.log(error);
                 },
@@ -1404,6 +1407,9 @@
             });
             instance.addEventListener("resource.ready", () => {
                 console.log("listener ready");
+            });
+            instance.addEventListener("keydown", (event) => {
+                console.log("keydown: " + event.key);
             });
 
         }).catch(error => {
