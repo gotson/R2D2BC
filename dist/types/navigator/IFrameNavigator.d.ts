@@ -35,6 +35,8 @@ export interface NavigatorAPI {
     resourceAtEnd: any;
     resourceFitsScreen: any;
     updateCurrentLocation: any;
+    keydownFallthrough: any;
+    clickThrough: any;
     onError?: (e: Error) => void;
 }
 export interface IFrameAttributes {
@@ -274,6 +276,7 @@ export declare class IFrameNavigator extends EventEmitter implements Navigator {
     };
     private handlePreviousChapterClick;
     private handleNextChapterClick;
+    private handleKeydownFallthrough;
     private hideView;
     private setActiveTOCItem;
     navigate(locator: Locator, history?: boolean): Promise<void>;

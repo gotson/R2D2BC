@@ -46220,16 +46220,21 @@ var Popup = class {
           return;
         }
         let self2 = this;
-        win.onclick = function(ev) {
-          if (event.target !== ev.target) {
-            if (d2popover.parentElement) {
-              self2.hidePopover();
-              if (win) {
-                win.onclick = null;
+        win.addEventListener(
+          "click",
+          function(ev) {
+            if (event.target !== ev.target) {
+              if (d2popover.parentElement) {
+                self2.hidePopover();
+                ev.stopImmediatePropagation();
               }
             }
+          },
+          {
+            once: true,
+            capture: true
           }
-        };
+        );
       }
     } else if (src) {
       let absolute = getAbsoluteHref(src);
@@ -46268,16 +46273,21 @@ var Popup = class {
           return;
         }
         let self2 = this;
-        win.onclick = function(ev) {
-          if (event.target !== ev.target) {
-            if (d2popover.parentElement) {
-              self2.hidePopover();
-              if (win) {
-                win.onclick = null;
+        win.addEventListener(
+          "click",
+          function(ev) {
+            if (event.target !== ev.target) {
+              if (d2popover.parentElement) {
+                self2.hidePopover();
+                ev.stopImmediatePropagation();
               }
             }
+          },
+          {
+            once: true,
+            capture: true
           }
-        };
+        );
       }
     }
   }
@@ -46448,7 +46458,7 @@ var EventHandler = class {
         },
         true
       );
-      element.addEventListener("click", this.handleLinks.bind(this));
+      element.addEventListener("click", this.handleLinks.bind(this), true);
     } else {
       throw "cannot setup events for null";
     }
@@ -58842,6 +58852,8 @@ var KeyboardEventHandler = class {
     };
     this.onForwardSwipe = () => {
     };
+    this.onKeydown = () => {
+    };
     this.setupEvents = (element) => {
       if (element) {
         this.focusin(element);
@@ -58879,20 +58891,22 @@ var KeyboardEventHandler = class {
             switch (key) {
               case "ArrowRight":
                 self2.onForwardSwipe(event);
-                break;
+                return;
               case "ArrowLeft":
                 self2.onBackwardSwipe(event);
-                break;
+                return;
             }
             switch (event.code) {
               case "Space":
                 if (event.ctrlKey) {
                   self2.onBackwardSwipe(event);
+                  return;
                 } else {
                   self2.onForwardSwipe(event);
+                  return;
                 }
-                break;
             }
+            self2.onKeydown(event);
           },
           false
         );
@@ -61916,6 +61930,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       if (this.keyboardEventHandler) {
         this.keyboardEventHandler.onBackwardSwipe = this.handlePreviousChapterClick.bind(this);
         this.keyboardEventHandler.onForwardSwipe = this.handleNextChapterClick.bind(this);
+        this.keyboardEventHandler.onKeydown = this.handleKeydownFallthrough.bind(this);
       }
       if (this.touchEventHandler) {
         this.touchEventHandler.onBackwardSwipe = this.handlePreviousPageClick.bind(this);
@@ -61955,6 +61970,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           if (this.keyboardEventHandler) {
             this.keyboardEventHandler.onBackwardSwipe = this.handlePreviousPageClick.bind(this);
             this.keyboardEventHandler.onForwardSwipe = this.handleNextPageClick.bind(this);
+            this.keyboardEventHandler.onKeydown = this.handleKeydownFallthrough.bind(this);
           }
         } else {
           if (this.infoBottom)
@@ -62058,6 +62074,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           if (this.keyboardEventHandler) {
             this.keyboardEventHandler.onBackwardSwipe = this.handlePreviousPageClick.bind(this);
             this.keyboardEventHandler.onForwardSwipe = this.handleNextPageClick.bind(this);
+            this.keyboardEventHandler.onKeydown = this.handleKeydownFallthrough.bind(this);
           }
         }
       });
@@ -63182,7 +63199,11 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       }
     }
   }
-  handleClickThrough(_event) {
+  handleClickThrough(event) {
+    var _a, _b;
+    if ((_a = this.api) == null ? void 0 : _a.clickThrough)
+      (_b = this.api) == null ? void 0 : _b.clickThrough(event);
+    this.emit("click", event);
   }
   handleInternalLink(event) {
     const element = event.target;
@@ -63462,6 +63483,12 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       event.preventDefault();
       event.stopPropagation();
     }
+  }
+  handleKeydownFallthrough(event) {
+    var _a, _b;
+    if ((_a = this.api) == null ? void 0 : _a.keydownFallthrough)
+      (_b = this.api) == null ? void 0 : _b.keydownFallthrough(event);
+    this.emit("keydown", event);
   }
   hideView() {
     var _a, _b;
