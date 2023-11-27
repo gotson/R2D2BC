@@ -13505,7 +13505,7 @@ var require_parse = __commonJS({
       try {
         parser.parse();
       } catch (e) {
-        if (false) {
+        if (true) {
           if (e.name === "CssSyntaxError" && opts && opts.from) {
             if (/\.scss$/i.test(opts.from)) {
               e.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
@@ -13697,7 +13697,7 @@ var require_lazy_result = __commonJS({
             error.plugin = plugin.postcssPlugin;
             error.setMessage();
           } else if (plugin.postcssVersion) {
-            if (false) {
+            if (true) {
               let pluginName = plugin.postcssPlugin;
               let pluginVer = plugin.postcssVersion;
               let runtimeVer = this.result.processor.version;
@@ -13882,7 +13882,7 @@ var require_lazy_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (false) {
+        if (true) {
           if (!("from" in this.opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14077,7 +14077,7 @@ var require_no_work_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (false) {
+        if (true) {
           if (!("from" in this._opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14166,7 +14166,7 @@ var require_processor = __commonJS({
           } else if (typeof i === "function") {
             normalized.push(i);
           } else if (typeof i === "object" && (i.parse || i.stringify)) {
-            if (false) {
+            if (true) {
               throw new Error(
                 "PostCSS syntaxes cannot be used as plugins. Instead, please use one of the syntax/parser/stringifier options as outlined in your PostCSS runner documentation."
               );
@@ -47069,7 +47069,9 @@ var _UserSettings = class _UserSettings {
         import_loglevel2.default.log(settings.verticalScroll);
       }
       if (initialUserSettings.appearance) {
-        settings.appearance = _UserSettings.parseAppearanceSetting(initialUserSettings.appearance);
+        settings.appearance = _UserSettings.parseAppearanceSetting(
+          initialUserSettings.appearance
+        );
         let prop = settings.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF);
         if (prop) {
           prop.value = settings.appearance;
@@ -47243,8 +47245,8 @@ var _UserSettings = class _UserSettings {
         "html"
       );
       if (html) {
-        const rootElement = document.documentElement;
-        const body = findRequiredElement(rootElement, "body");
+        const rootElement = findElement(document, "#root") || document.documentElement;
+        const body = findElement(html, "body");
         html.style.removeProperty(ReadiumCSS.FONT_SIZE_KEY);
         html.style.removeProperty(ReadiumCSS.WORD_SPACING_KEY);
         html.style.removeProperty(ReadiumCSS.LETTER_SPACING_KEY);
@@ -47253,8 +47255,10 @@ var _UserSettings = class _UserSettings {
         html.style.removeProperty(ReadiumCSS.LINE_HEIGHT_KEY);
         html.style.removeProperty(ReadiumCSS.PAGE_MARGINS_KEY);
         html.style.removeProperty(ReadiumCSS.APPEARANCE_KEY);
-        setAttr(rootElement, "data-viewer-theme", "day");
-        setAttr(body, "data-viewer-theme", "day");
+        if (rootElement)
+          setAttr(rootElement, "data-viewer-theme", "day");
+        if (body)
+          setAttr(body, "data-viewer-theme", "day");
         html.style.removeProperty(ReadiumCSS.FONT_FAMILY_KEY);
         setAttr(html, "data-viewer-font", "publisher");
         html.style.setProperty(
@@ -47282,8 +47286,8 @@ var _UserSettings = class _UserSettings {
         "html"
       );
       if (html) {
-        const rootElement = document.documentElement;
-        const body = findRequiredElement(rootElement, "body");
+        const rootElement = findElement(document, "#root") || document.documentElement;
+        const body = findElement(html, "body");
         if ((_a = this.view) == null ? void 0 : _a.navigator.publication.isReflowable) {
           if (await this.getProperty(ReadiumCSS.FONT_SIZE_KEY)) {
             html.style.setProperty(
@@ -47340,22 +47344,30 @@ var _UserSettings = class _UserSettings {
             ((_k = this.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _k.toString()) ?? null
           );
           if (((_l = this.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _l.value) === 0) {
-            setAttr(rootElement, "data-viewer-theme", "day");
-            setAttr(body, "data-viewer-theme", "day");
+            if (rootElement)
+              setAttr(rootElement, "data-viewer-theme", "day");
+            if (body)
+              setAttr(body, "data-viewer-theme", "day");
           } else if (((_m = this.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _m.value) === 1) {
-            setAttr(rootElement, "data-viewer-theme", "sepia");
-            setAttr(body, "data-viewer-theme", "sepia");
+            if (rootElement)
+              setAttr(rootElement, "data-viewer-theme", "sepia");
+            if (body)
+              setAttr(body, "data-viewer-theme", "sepia");
           } else if (((_n = this.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _n.value) === 2) {
-            setAttr(rootElement, "data-viewer-theme", "night");
-            setAttr(body, "data-viewer-theme", "night");
+            if (rootElement)
+              setAttr(rootElement, "data-viewer-theme", "night");
+            if (body)
+              setAttr(body, "data-viewer-theme", "night");
           }
         } else {
           html.style.setProperty(
             ReadiumCSS.APPEARANCE_KEY,
             ((_o = this.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _o.toString()) ?? null
           );
-          setAttr(rootElement, "data-viewer-theme", "day");
-          setAttr(body, "data-viewer-theme", "day");
+          if (rootElement)
+            setAttr(rootElement, "data-viewer-theme", "day");
+          if (body)
+            setAttr(body, "data-viewer-theme", "day");
         }
         if ((_p = this.view) == null ? void 0 : _p.navigator.publication.isReflowable) {
           if (await this.getProperty(ReadiumCSS.FONT_FAMILY_KEY)) {
@@ -47647,7 +47659,9 @@ var _UserSettings = class _UserSettings {
   async applyUserSettings(userSettings) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     if (userSettings.appearance) {
-      this.appearance = _UserSettings.parseAppearanceSetting(userSettings.appearance);
+      this.appearance = _UserSettings.parseAppearanceSetting(
+        userSettings.appearance
+      );
       let prop = (_a = this.userProperties) == null ? void 0 : _a.getByRef(ReadiumCSS.APPEARANCE_REF);
       if (prop) {
         prop.value = this.appearance;
@@ -47772,9 +47786,7 @@ var _UserSettings = class _UserSettings {
     } else {
       a = inputSetting;
     }
-    return _UserSettings.appearanceValues.findIndex(
-      (el) => el === a
-    );
+    return _UserSettings.appearanceValues.findIndex((el) => el === a);
   }
   async scroll(scroll) {
     var _a, _b, _c, _d, _e;
@@ -55077,7 +55089,7 @@ function delay(t, v) {
     setTimeout(resolve.bind(null, v), t);
   });
 }
-var IS_DEV = false;
+var IS_DEV = true;
 import_loglevel13.default.setLevel(IS_DEV ? "trace" : "warn", true);
 
 // src/modules/protection/ContentProtectionModule.ts
@@ -58860,59 +58872,67 @@ var KeyboardEventHandler = class {
         this.keydown(element);
       }
     };
+    this.removeEvents = (element) => {
+      if (element) {
+        const self2 = this;
+        element.removeEventListener("focusin", this.onFocusIn(self2), true);
+        element.removeEventListener("keydown", this.onKeyDown(self2), false);
+      }
+    };
     this.focusin = (element) => {
       const self2 = this;
-      element.addEventListener(
-        "focusin",
-        function(event) {
-          var _a;
-          (_a = self2.navigator.view) == null ? void 0 : _a.snap(event.target);
-        },
-        true
-      );
+      element.addEventListener("focusin", this.onFocusIn(self2), true);
     };
     this.keydown = (element) => {
       const self2 = this;
       if (!this.navigator.rights.customKeyboardEvents) {
-        element.addEventListener(
-          "keydown",
-          function(event) {
-            const eventTarget = event.target;
-            if (/input|select|option|textarea/i.test(eventTarget.tagName)) {
-              return;
-            }
-            const ownerDocument = eventTarget.ownerDocument || eventTarget;
-            const ownerWindow = ownerDocument.defaultView;
-            const selection = ownerWindow.getSelection();
-            if (!selection.isCollapsed) {
-              return;
-            }
-            const key = event.key;
-            switch (key) {
-              case "ArrowRight":
-                self2.onForwardSwipe(event);
-                return;
-              case "ArrowLeft":
-                self2.onBackwardSwipe(event);
-                return;
-            }
-            switch (event.code) {
-              case "Space":
-                if (event.ctrlKey) {
-                  self2.onBackwardSwipe(event);
-                  return;
-                } else {
-                  self2.onForwardSwipe(event);
-                  return;
-                }
-            }
-            self2.onKeydown(event);
-          },
-          false
-        );
+        element.addEventListener("keydown", this.onKeyDown(self2), false);
       }
     };
+    // store the generated event handlers, so they can be returned
+    // when removing the event listeners
+    this.handlers = {};
     this.navigator = navigator2;
+  }
+  onFocusIn(self2) {
+    return this.handlers["onFocusIn"] || (this.handlers["onFocusIn"] = function(event) {
+      var _a;
+      (_a = self2.navigator.view) == null ? void 0 : _a.snap(event.target);
+    });
+  }
+  onKeyDown(self2) {
+    return this.handlers["onKeyDown"] || (this.handlers["onKeyDown"] = function(event) {
+      const eventTarget = event.target;
+      if (/input|select|option|textarea/i.test(eventTarget.tagName)) {
+        return;
+      }
+      const ownerDocument = eventTarget.ownerDocument || eventTarget;
+      const ownerWindow = ownerDocument.defaultView;
+      const selection = ownerWindow.getSelection();
+      if (!selection.isCollapsed) {
+        return;
+      }
+      const key = event.key;
+      switch (key) {
+        case "ArrowRight":
+          self2.onForwardSwipe(event);
+          return;
+        case "ArrowLeft":
+          self2.onBackwardSwipe(event);
+          return;
+      }
+      switch (event.code) {
+        case "Space":
+          if (event.ctrlKey) {
+            self2.onBackwardSwipe(event);
+            return;
+          } else {
+            self2.onForwardSwipe(event);
+            return;
+          }
+      }
+      self2.onKeydown(event);
+    });
   }
 };
 
@@ -61558,6 +61578,8 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
     this.iframes.forEach((iframe) => {
       removeEventListenerOptional(iframe, "resize", this.onResize);
     });
+    if (this.didInitKeyboardEventHandler)
+      this.keyboardEventHandler.removeEvents(document);
   }
   async start(mainElement, headerMenu, footerMenu) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
