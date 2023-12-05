@@ -37,6 +37,8 @@ export interface NavigatorAPI {
     updateCurrentLocation: any;
     keydownFallthrough: any;
     clickThrough: any;
+    positionInfo: any;
+    chapterInfo: any;
     onError?: (e: Error) => void;
 }
 export interface IFrameAttributes {

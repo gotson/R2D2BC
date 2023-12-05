@@ -62261,7 +62261,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
     }
   }
   async handleIFrameLoad() {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     if (this.errorMessage)
       this.errorMessage.style.display = "none";
     this.showLoadingMessageAfterDelay();
@@ -62347,15 +62347,21 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       if (this.currentChapterLink.title) {
         if (this.chapterTitle)
           this.chapterTitle.innerHTML = "(" + this.currentChapterLink.title + ")";
+        if ((_a = this.api) == null ? void 0 : _a.chapterInfo)
+          (_b = this.api) == null ? void 0 : _b.chapterInfo(this.currentChapterLink.title);
+        this.emit("chapterinfo", this.currentChapterLink.title);
       } else {
         if (this.chapterTitle)
           this.chapterTitle.innerHTML = "(Current Chapter)";
+        if ((_c = this.api) == null ? void 0 : _c.chapterInfo)
+          (_d = this.api) == null ? void 0 : _d.chapterInfo(void 0);
+        this.emit("chapterinfo", void 0);
       }
       await this.injectInjectablesIntoIframeHead();
       if (this.highlighter !== void 0) {
         await this.highlighter.initialize();
       }
-      const body = (_a = this.iframes[0].contentDocument) == null ? void 0 : _a.body;
+      const body = (_e = this.iframes[0].contentDocument) == null ? void 0 : _e.body;
       let details = body == null ? void 0 : body.querySelector("details");
       if (details) {
         let self2 = this;
@@ -62376,10 +62382,10 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           this.didInitKeyboardEventHandler = true;
         }
       }
-      if (((_b = this.view) == null ? void 0 : _b.layout) !== "fixed") {
-        if ((_c = this.view) == null ? void 0 : _c.isScrollMode()) {
+      if (((_f = this.view) == null ? void 0 : _f.layout) !== "fixed") {
+        if ((_g = this.view) == null ? void 0 : _g.isScrollMode()) {
           this.iframes[0].height = "0";
-          (_e = (_d = this.view) == null ? void 0 : _d.setIframeHeight) == null ? void 0 : _e.call(_d, this.iframes[0]);
+          (_i = (_h = this.view) == null ? void 0 : _h.setIframeHeight) == null ? void 0 : _i.call(_h, this.iframes[0]);
         }
       }
       if (this.rights.enableContentProtection && this.contentProtectionModule) {
@@ -62398,7 +62404,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         await this.lineFocusModule.initialize();
       }
       if (this.rights.enableTTS && this.ttsModule) {
-        const body2 = (_f = this.iframes[0].contentDocument) == null ? void 0 : _f.body;
+        const body2 = (_j = this.iframes[0].contentDocument) == null ? void 0 : _j.body;
         const ttsModule = this.ttsModule;
         await ttsModule.initialize(body2);
       }
@@ -62409,7 +62415,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         await this.mediaOverlayModule.initialize();
       }
       setTimeout(async () => {
-        var _a2, _b2, _c2, _d2, _e2, _f2, _g, _h;
+        var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
         if (this.newElementId) {
           const element = this.iframes[0].contentDocument.getElementById(this.newElementId);
           (_b2 = (_a2 = this.view) == null ? void 0 : _a2.goToElement) == null ? void 0 : _b2.call(_a2, element);
@@ -62432,10 +62438,10 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         this.showIframeContents();
         if (this.rights.enableMediaOverlays && this.mediaOverlayModule && this.hasMediaOverlays) {
           let link = this.currentLink();
-          await ((_g = this.mediaOverlayModule) == null ? void 0 : _g.initializeResource(link));
+          await ((_g2 = this.mediaOverlayModule) == null ? void 0 : _g2.initializeResource(link));
         }
         await this.updatePositionInfo();
-        await ((_h = this.view) == null ? void 0 : _h.setSize());
+        await ((_h2 = this.view) == null ? void 0 : _h2.setSize());
         setTimeout(() => {
           if (this.mediaOverlayModule) {
             this.mediaOverlayModule.settings.resourceReady = true;
@@ -63405,7 +63411,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
     }, 150);
   }
   updatePositionInfo(save = true) {
-    var _a, _b;
+    var _a, _b, _c, _d;
     if (((_a = this.view) == null ? void 0 : _a.layout) === "fixed") {
       if (this.chapterPosition)
         this.chapterPosition.innerHTML = "";
@@ -63420,6 +63426,10 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           if (this.chapterPosition) {
             this.chapterPosition.innerHTML = "Page " + currentPage + " of " + pageCount;
           }
+          if ((_c = this.api) == null ? void 0 : _c.positionInfo) {
+            (_d = this.api) == null ? void 0 : _d.positionInfo(locator);
+          }
+          this.emit("positioninfo", locator);
         }
       } else {
         if (this.chapterPosition)
@@ -63537,7 +63547,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
     }
   }
   async navigate(locator, history = true) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     if (this.rights.enableConsumption && this.consumptionModule) {
       if (history) {
         this.consumptionModule.startReadingSession(locator);
@@ -63670,9 +63680,15 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         if (this.currentChapterLink.title) {
           if (this.chapterTitle)
             this.chapterTitle.innerHTML = "(" + this.currentChapterLink.title + ")";
+          if ((_f = this.api) == null ? void 0 : _f.chapterInfo)
+            (_g = this.api) == null ? void 0 : _g.chapterInfo(this.currentChapterLink.title);
+          this.emit("chapterinfo", this.currentChapterLink.title);
         } else {
           if (this.chapterTitle)
             this.chapterTitle.innerHTML = "(Current Chapter)";
+          if ((_h = this.api) == null ? void 0 : _h.chapterInfo)
+            (_i = this.api) == null ? void 0 : _i.chapterInfo(void 0);
+          this.emit("chapterinfo", void 0);
         }
         await this.updatePositionInfo();
       } else {
@@ -63712,7 +63728,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           await this.bookmarkModule.showBookmarks();
         }
         if (this.pageBreakModule) {
-          await ((_f = this.highlighter) == null ? void 0 : _f.destroyHighlights(3 /* PageBreak */));
+          await ((_j = this.highlighter) == null ? void 0 : _j.destroyHighlights(3 /* PageBreak */));
           await this.pageBreakModule.drawPageBreaks();
         }
         if (this.rights.enableSearch && this.searchModule !== void 0 && this.highlighter !== void 0) {
@@ -63725,13 +63741,13 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         if (this.rights.enableConsumption && this.consumptionModule) {
           this.consumptionModule.continueReadingSession(locator);
         }
-        if (((_g = this.view) == null ? void 0 : _g.layout) === "fixed") {
+        if (((_k = this.view) == null ? void 0 : _k.layout) === "fixed") {
           if (this.nextChapterBottomAnchorElement)
             this.nextChapterBottomAnchorElement.style.display = "none";
           if (this.previousChapterTopAnchorElement)
             this.previousChapterTopAnchorElement.style.display = "none";
-          if ((_h = this.api) == null ? void 0 : _h.resourceFitsScreen)
-            (_i = this.api) == null ? void 0 : _i.resourceFitsScreen();
+          if ((_l = this.api) == null ? void 0 : _l.resourceFitsScreen)
+            (_m = this.api) == null ? void 0 : _m.resourceFitsScreen();
           this.emit("resource.fits");
         } else {
           this.settings.isPaginated().then((paginated) => {
