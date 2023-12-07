@@ -34,6 +34,7 @@ import ReflowableBookView from "../../views/ReflowableBookView";
 import FixedBookView from "../../views/FixedBookView";
 import BookView from "../../views/BookView";
 import log from "loglevel";
+import { R2D2BC } from "./R2D2BC";
 
 export interface UserSettingsConfig {
   /** Store to save the user's selections in. */
@@ -77,6 +78,8 @@ export interface IUserSettings {
   letterSpacing: number;
   pageMargins: number;
   lineHeight: number;
+  fixedLayoutMargin: number;
+  fixedLayoutShadow: boolean;
 }
 
 /**
@@ -104,6 +107,8 @@ export interface InitialUserSettings {
   letterSpacing: number;
   pageMargins: number;
   lineHeight: number;
+  fixedLayoutMargin: number;
+  fixedLayoutShadow: boolean;
 }
 
 export class UserSettings implements IUserSettings {
@@ -145,6 +150,8 @@ export class UserSettings implements IUserSettings {
   letterSpacing = 0.0;
   pageMargins = 2.0;
   lineHeight = 1.0;
+  fixedLayoutMargin = 100;
+  fixedLayoutShadow = true;
 
   userProperties?: UserProperties;
 
@@ -290,6 +297,28 @@ export class UserSettings implements IUserSettings {
         }
         log.log(settings.lineHeight);
       }
+      if (initialUserSettings.fixedLayoutMargin >= 0) {
+        settings.fixedLayoutMargin = initialUserSettings.fixedLayoutMargin;
+        let prop = settings.userProperties.getByRef(
+          R2D2BC.FIXED_LAYOUT_MARGIN_REF
+        );
+        if (prop) {
+          prop.value = settings.fixedLayoutMargin;
+          await settings.saveProperty(prop);
+        }
+        log.log(settings.fixedLayoutMargin);
+      }
+      if ("fixedLayoutShadow" in initialUserSettings) {
+        settings.fixedLayoutShadow = initialUserSettings.fixedLayoutShadow;
+        let prop = settings.userProperties.getByRef(
+          R2D2BC.FIXED_LAYOUT_SHADOW_REF
+        );
+        if (prop) {
+          prop.value = settings.fixedLayoutShadow;
+          await settings.saveProperty(prop);
+        }
+        log.log(settings.fixedLayoutShadow);
+      }
       settings.userProperties = settings.getUserSettings();
       await settings.initialise();
     }
@@ -385,6 +414,14 @@ export class UserSettings implements IUserSettings {
       "lineHeight",
       ReadiumCSS.LINE_HEIGHT_KEY
     );
+    this.fixedLayoutMargin = await this.getPropertyAndFallback<Incremental>(
+      "fixedLayoutMargin",
+      R2D2BC.FIXED_LAYOUT_MARGIN_KEY
+    );
+    this.fixedLayoutShadow = await this.getPropertyAndFallback<Switchable>(
+      "fixedLayoutShadow",
+      R2D2BC.FIXED_LAYOUT_SHADOW_KEY
+    );
     this.userProperties = this.getUserSettings();
   }
 
@@ -403,6 +440,8 @@ export class UserSettings implements IUserSettings {
     this.letterSpacing = 0.0;
     this.pageMargins = 2.0;
     this.lineHeight = 1.0;
+    this.fixedLayoutMargin = 100;
+    this.fixedLayoutShadow = true;
 
     this.userProperties = this.getUserSettings();
 
@@ -917,6 +956,24 @@ export class UserSettings implements IUserSettings {
       ReadiumCSS.SCROLL_REF,
       ReadiumCSS.SCROLL_KEY
     );
+    // Fixed layout margin
+    userProperties.addIncremental(
+      this.fixedLayoutMargin,
+      0,
+      500,
+      10,
+      "",
+      R2D2BC.FIXED_LAYOUT_MARGIN_REF,
+      R2D2BC.FIXED_LAYOUT_MARGIN_KEY
+    );
+    // Fixed layout shadow
+    userProperties.addSwitchable(
+      "true",
+      "false",
+      this.fixedLayoutShadow,
+      R2D2BC.FIXED_LAYOUT_SHADOW_REF,
+      R2D2BC.FIXED_LAYOUT_SHADOW_KEY
+    );
 
     return userProperties;
   }
@@ -993,6 +1050,8 @@ export class UserSettings implements IUserSettings {
       letterSpacing: this.letterSpacing,
       pageMargins: this.pageMargins,
       lineHeight: this.lineHeight,
+      fixedLayoutMargin: this.fixedLayoutMargin,
+      fixedLayoutShadow: this.fixedLayoutShadow,
     };
   }
 
@@ -1072,6 +1131,24 @@ export class UserSettings implements IUserSettings {
     if (userSettings.lineHeight) {
       this.lineHeight = userSettings.lineHeight;
       let prop = this.userProperties?.getByRef(ReadiumCSS.LINE_HEIGHT_REF);
+      if (prop) {
+        prop.value = this.lineHeight;
+        await this.storeProperty(prop);
+      }
+    }
+
+    if ("fixedLayoutMargin" in userSettings) {
+      this.fixedLayoutMargin = userSettings.fixedLayoutMargin!!;
+      let prop = this.userProperties?.getByRef(R2D2BC.FIXED_LAYOUT_MARGIN_REF);
+      if (prop) {
+        prop.value = this.fixedLayoutMargin;
+        await this.storeProperty(prop);
+      }
+    }
+
+    if ("fixedLayoutShadow" in userSettings) {
+      this.fixedLayoutShadow = userSettings.fixedLayoutShadow!!;
+      let prop = this.userProperties?.getByRef(R2D2BC.FIXED_LAYOUT_SHADOW_REF);
       if (prop) {
         prop.value = this.lineHeight;
         await this.storeProperty(prop);
