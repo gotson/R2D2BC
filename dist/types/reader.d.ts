@@ -146,6 +146,8 @@ export default class D2Reader {
         letterSpacing: number;
         pageMargins: number;
         lineHeight: number;
+        fixedLayoutMargin: number;
+        fixedLayoutShadow: boolean;
     };
     resetUserSettings: () => Promise<void>;
     applyUserSettings: (userSettings: Partial<UserSettings>) => Promise<void>;

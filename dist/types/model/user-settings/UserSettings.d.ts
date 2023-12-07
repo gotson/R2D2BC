@@ -39,6 +39,8 @@ export interface IUserSettings {
     letterSpacing: number;
     pageMargins: number;
     lineHeight: number;
+    fixedLayoutMargin: number;
+    fixedLayoutShadow: boolean;
 }
 /**
  * The settings that someone might pass in when instantiating
@@ -57,6 +59,8 @@ export interface InitialUserSettings {
     letterSpacing: number;
     pageMargins: number;
     lineHeight: number;
+    fixedLayoutMargin: number;
+    fixedLayoutShadow: boolean;
 }
 export declare class UserSettings implements IUserSettings {
     isPaginated(): Promise<boolean>;
@@ -78,6 +82,8 @@ export declare class UserSettings implements IUserSettings {
     letterSpacing: number;
     pageMargins: number;
     lineHeight: number;
+    fixedLayoutMargin: number;
+    fixedLayoutShadow: boolean;
     userProperties?: UserProperties;
     view: BookView;
     private settingsChangeCallback;
@@ -125,6 +131,8 @@ export declare class UserSettings implements IUserSettings {
         letterSpacing: number;
         pageMargins: number;
         lineHeight: number;
+        fixedLayoutMargin: number;
+        fixedLayoutShadow: boolean;
     };
     applyUserSettings(userSettings: Partial<UserSettings>): Promise<void>;
     /**

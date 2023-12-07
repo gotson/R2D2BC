@@ -47001,6 +47001,18 @@ and ensure you are accounting for this risk.
 
   // src/model/user-settings/UserSettings.ts
   var import_loglevel2 = __toESM(require_loglevel());
+
+  // src/model/user-settings/R2D2BC.ts
+  init_polyfills();
+  var _R2D2BC = class _R2D2BC {
+  };
+  _R2D2BC.FIXED_LAYOUT_MARGIN_REF = "fixedLayoutMargin";
+  _R2D2BC.FIXED_LAYOUT_SHADOW_REF = "fixedLayoutShadow";
+  _R2D2BC.FIXED_LAYOUT_MARGIN_KEY = "--USER__" + _R2D2BC.FIXED_LAYOUT_MARGIN_REF;
+  _R2D2BC.FIXED_LAYOUT_SHADOW_KEY = "--USER__" + _R2D2BC.FIXED_LAYOUT_SHADOW_REF;
+  var R2D2BC = _R2D2BC;
+
+  // src/model/user-settings/UserSettings.ts
   var _UserSettings = class _UserSettings {
     constructor(store, headerMenu, api, injectables, layout) {
       this.USERSETTINGS = "userSetting";
@@ -47017,6 +47029,8 @@ and ensure you are accounting for this risk.
       this.letterSpacing = 0;
       this.pageMargins = 2;
       this.lineHeight = 1;
+      this.fixedLayoutMargin = 100;
+      this.fixedLayoutShadow = true;
       this.settingsChangeCallback = () => {
       };
       this.settingsColumnsChangeCallback = () => {
@@ -47177,6 +47191,28 @@ and ensure you are accounting for this risk.
           }
           import_loglevel2.default.log(settings.lineHeight);
         }
+        if (initialUserSettings.fixedLayoutMargin >= 0) {
+          settings.fixedLayoutMargin = initialUserSettings.fixedLayoutMargin;
+          let prop = settings.userProperties.getByRef(
+            R2D2BC.FIXED_LAYOUT_MARGIN_REF
+          );
+          if (prop) {
+            prop.value = settings.fixedLayoutMargin;
+            await settings.saveProperty(prop);
+          }
+          import_loglevel2.default.log(settings.fixedLayoutMargin);
+        }
+        if ("fixedLayoutShadow" in initialUserSettings) {
+          settings.fixedLayoutShadow = initialUserSettings.fixedLayoutShadow;
+          let prop = settings.userProperties.getByRef(
+            R2D2BC.FIXED_LAYOUT_SHADOW_REF
+          );
+          if (prop) {
+            prop.value = settings.fixedLayoutShadow;
+            await settings.saveProperty(prop);
+          }
+          import_loglevel2.default.log(settings.fixedLayoutShadow);
+        }
         settings.userProperties = settings.getUserSettings();
         await settings.initialise();
       }
@@ -47230,6 +47266,14 @@ and ensure you are accounting for this risk.
         "lineHeight",
         ReadiumCSS.LINE_HEIGHT_KEY
       );
+      this.fixedLayoutMargin = await this.getPropertyAndFallback(
+        "fixedLayoutMargin",
+        R2D2BC.FIXED_LAYOUT_MARGIN_KEY
+      );
+      this.fixedLayoutShadow = await this.getPropertyAndFallback(
+        "fixedLayoutShadow",
+        R2D2BC.FIXED_LAYOUT_SHADOW_KEY
+      );
       this.userProperties = this.getUserSettings();
     }
     async reset() {
@@ -47244,6 +47288,8 @@ and ensure you are accounting for this risk.
       this.letterSpacing = 0;
       this.pageMargins = 2;
       this.lineHeight = 1;
+      this.fixedLayoutMargin = 100;
+      this.fixedLayoutShadow = true;
       this.userProperties = this.getUserSettings();
       let doc = this.iframe.contentDocument;
       if (doc) {
@@ -47602,6 +47648,22 @@ and ensure you are accounting for this risk.
         ReadiumCSS.SCROLL_REF,
         ReadiumCSS.SCROLL_KEY
       );
+      userProperties.addIncremental(
+        this.fixedLayoutMargin,
+        0,
+        500,
+        10,
+        "",
+        R2D2BC.FIXED_LAYOUT_MARGIN_REF,
+        R2D2BC.FIXED_LAYOUT_MARGIN_KEY
+      );
+      userProperties.addSwitchable(
+        "true",
+        "false",
+        this.fixedLayoutShadow,
+        R2D2BC.FIXED_LAYOUT_SHADOW_REF,
+        R2D2BC.FIXED_LAYOUT_SHADOW_KEY
+      );
       return userProperties;
     }
     async saveProperty(property) {
@@ -47660,11 +47722,13 @@ and ensure you are accounting for this risk.
         wordSpacing: this.wordSpacing,
         letterSpacing: this.letterSpacing,
         pageMargins: this.pageMargins,
-        lineHeight: this.lineHeight
+        lineHeight: this.lineHeight,
+        fixedLayoutMargin: this.fixedLayoutMargin,
+        fixedLayoutShadow: this.fixedLayoutShadow
       };
     }
     async applyUserSettings(userSettings) {
-      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
       if (userSettings.appearance) {
         this.appearance = _UserSettings.parseAppearanceSetting(
           userSettings.appearance
@@ -47738,27 +47802,43 @@ and ensure you are accounting for this risk.
           await this.storeProperty(prop);
         }
       }
+      if ("fixedLayoutMargin" in userSettings) {
+        this.fixedLayoutMargin = userSettings.fixedLayoutMargin;
+        let prop = (_i = this.userProperties) == null ? void 0 : _i.getByRef(R2D2BC.FIXED_LAYOUT_MARGIN_REF);
+        if (prop) {
+          prop.value = this.fixedLayoutMargin;
+          await this.storeProperty(prop);
+        }
+      }
+      if ("fixedLayoutShadow" in userSettings) {
+        this.fixedLayoutShadow = userSettings.fixedLayoutShadow;
+        let prop = (_j = this.userProperties) == null ? void 0 : _j.getByRef(R2D2BC.FIXED_LAYOUT_SHADOW_REF);
+        if (prop) {
+          prop.value = this.lineHeight;
+          await this.storeProperty(prop);
+        }
+      }
       if (userSettings.pageMargins) {
         this.pageMargins = userSettings.pageMargins;
-        let prop = (_i = this.userProperties) == null ? void 0 : _i.getByRef(ReadiumCSS.PAGE_MARGINS_REF);
+        let prop = (_k = this.userProperties) == null ? void 0 : _k.getByRef(ReadiumCSS.PAGE_MARGINS_REF);
         if (prop) {
           prop.value = this.pageMargins;
           await this.storeProperty(prop);
         }
       }
       if (userSettings.verticalScroll !== void 0) {
-        const position = (_j = this.view) == null ? void 0 : _j.getCurrentPosition();
+        const position = (_l = this.view) == null ? void 0 : _l.getCurrentPosition();
         this.verticalScroll = _UserSettings.parseScrollSetting(
           userSettings.verticalScroll
         );
-        let prop = (_k = this.userProperties) == null ? void 0 : _k.getByRef(ReadiumCSS.SCROLL_REF);
+        let prop = (_m = this.userProperties) == null ? void 0 : _m.getByRef(ReadiumCSS.SCROLL_REF);
         if (prop) {
           prop.value = this.verticalScroll;
           await this.saveProperty(prop);
         }
-        (_m = (_l = this.view) == null ? void 0 : _l.setMode) == null ? void 0 : _m.call(_l, this.verticalScroll);
+        (_o = (_n = this.view) == null ? void 0 : _n.setMode) == null ? void 0 : _o.call(_n, this.verticalScroll);
         if (position) {
-          (_n = this.view) == null ? void 0 : _n.goToProgression(position);
+          (_p = this.view) == null ? void 0 : _p.goToProgression(position);
         }
         this.viewChangeCallback();
       }
@@ -59155,6 +59235,9 @@ and ensure you are accounting for this risk.
         if ((pageBreaks == null ? void 0 : pageBreaks.length) === 0) {
           pageBreaks = body == null ? void 0 : body.querySelectorAll("[epub\\:type='pagebreak']");
         }
+        if ((pageBreaks == null ? void 0 : pageBreaks.length) === 0) {
+          pageBreaks = body == null ? void 0 : body.querySelectorAll("[role='doc-pagebreak']");
+        }
         let self2 = this;
         function getCssSelector(element) {
           try {
@@ -61644,10 +61727,12 @@ and ensure you are accounting for this risk.
               iframe22.style.overflow = "hidden";
               this.iframes.push(iframe22);
               secondSpread.appendChild(this.iframes[1]);
-              this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 100% 120%, -20% 120%)";
-              this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
-              secondSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, 0% 120%)";
-              secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
+              if (this.settings.fixedLayoutShadow) {
+                this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 100% 120%, -20% 120%)";
+                this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+                secondSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, 0% 120%)";
+                secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
+              }
             } else {
               this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
               this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
@@ -62928,8 +63013,8 @@ and ensure you are accounting for this risk.
           }
           var iframeParent = index2 === 0 && this.iframes.length === 2 ? (_b2 = this.iframes[1].parentElement) == null ? void 0 : _b2.parentElement : (_c2 = this.iframes[0].parentElement) == null ? void 0 : _c2.parentElement;
           if (iframeParent && width) {
-            var widthRatio = (parseInt(getComputedStyle(iframeParent).width) - 100) / (this.iframes.length === 2 ? parseInt(width == null ? void 0 : width.replace("px", "")) * 2 + 200 : parseInt(width == null ? void 0 : width.replace("px", "")));
-            var heightRatio = (parseInt(getComputedStyle(iframeParent).height) - 100) / parseInt(height == null ? void 0 : height.replace("px", ""));
+            var widthRatio = (parseInt(getComputedStyle(iframeParent).width) - this.settings.fixedLayoutMargin) / (this.iframes.length === 2 ? parseInt(width == null ? void 0 : width.replace("px", "")) * 2 + 2 * this.settings.fixedLayoutMargin : parseInt(width == null ? void 0 : width.replace("px", "")));
+            var heightRatio = (parseInt(getComputedStyle(iframeParent).height) - this.settings.fixedLayoutMargin) / parseInt(height == null ? void 0 : height.replace("px", ""));
             var scale = Math.min(widthRatio, heightRatio);
             iframeParent.style.transform = "scale(" + scale + ")";
             for (const iframe of this.iframes) {
@@ -63282,10 +63367,12 @@ and ensure you are accounting for this risk.
           let secondSpread = document.createElement("div");
           this.spreads.appendChild(secondSpread);
           secondSpread.appendChild(this.iframes[1]);
-          this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 100% 120%, -20% 120%)";
-          this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
-          secondSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, 0% 120%)";
-          secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
+          if (this.settings.fixedLayoutShadow) {
+            this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 100% 120%, -20% 120%)";
+            this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+            secondSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, 0% 120%)";
+            secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
+          }
         } else {
           if (this.iframes.length === 2) {
             this.iframes.pop();
@@ -63343,8 +63430,8 @@ and ensure you are accounting for this risk.
               }
             }
           }
-          var widthRatio = (parseInt(getComputedStyle(iframeParent).width) - 100) / (this.iframes.length === 2 ? parseInt(width == null ? void 0 : width.replace("px", "")) * 2 + 200 : parseInt(width == null ? void 0 : width.replace("px", "")));
-          var heightRatio = (parseInt(getComputedStyle(iframeParent).height) - 100) / parseInt(height == null ? void 0 : height.replace("px", ""));
+          var widthRatio = (parseInt(getComputedStyle(iframeParent).width) - this.settings.fixedLayoutMargin) / (this.iframes.length === 2 ? parseInt(width == null ? void 0 : width.replace("px", "")) * 2 + 2 * this.settings.fixedLayoutMargin : parseInt(width == null ? void 0 : width.replace("px", "")));
+          var heightRatio = (parseInt(getComputedStyle(iframeParent).height) - this.settings.fixedLayoutMargin) / parseInt(height == null ? void 0 : height.replace("px", ""));
           var scale = Math.min(widthRatio, heightRatio);
           iframeParent.style.transform = "scale(" + scale + ")";
           for (const iframe of this.iframes) {
