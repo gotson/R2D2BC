@@ -611,9 +611,11 @@ export class IFrameNavigator extends EventEmitter implements Navigator {
               secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
             }
           } else {
-            this.firstSpread.style.clipPath =
-              "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
-            this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+            if (this.settings.fixedLayoutShadow) {
+              this.firstSpread.style.clipPath =
+                "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
+              this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+            }
           }
         } else {
           this.iframes[0].style.paddingTop =
@@ -2552,9 +2554,11 @@ export class IFrameNavigator extends EventEmitter implements Navigator {
             this.spreads.removeChild(this.spreads.lastChild);
           }
         }
-        this.firstSpread.style.clipPath =
-          "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
-        this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+        if (this.settings.fixedLayoutShadow) {
+          this.firstSpread.style.clipPath =
+            "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
+          this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+        }
       }
       this.precessContentForIframe();
     }
