@@ -2003,7 +2003,7 @@
 
   // injectables/click/click.ts
   init_polyfills();
-  var IS_DEV = true;
+  var IS_DEV = false;
   document.addEventListener(
     "click",
     async (_event) => {

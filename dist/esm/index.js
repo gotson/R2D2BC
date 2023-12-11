@@ -13505,7 +13505,7 @@ var require_parse = __commonJS({
       try {
         parser.parse();
       } catch (e) {
-        if (true) {
+        if (false) {
           if (e.name === "CssSyntaxError" && opts && opts.from) {
             if (/\.scss$/i.test(opts.from)) {
               e.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
@@ -13697,7 +13697,7 @@ var require_lazy_result = __commonJS({
             error.plugin = plugin.postcssPlugin;
             error.setMessage();
           } else if (plugin.postcssVersion) {
-            if (true) {
+            if (false) {
               let pluginName = plugin.postcssPlugin;
               let pluginVer = plugin.postcssVersion;
               let runtimeVer = this.result.processor.version;
@@ -13882,7 +13882,7 @@ var require_lazy_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (true) {
+        if (false) {
           if (!("from" in this.opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14077,7 +14077,7 @@ var require_no_work_result = __commonJS({
         return this.result;
       }
       then(onFulfilled, onRejected) {
-        if (true) {
+        if (false) {
           if (!("from" in this._opts)) {
             warnOnce(
               "Without `from` option PostCSS could generate wrong source map and will not find Browserslist config. Set it to CSS file path or to `undefined` to prevent this warning."
@@ -14166,7 +14166,7 @@ var require_processor = __commonJS({
           } else if (typeof i === "function") {
             normalized.push(i);
           } else if (typeof i === "object" && (i.parse || i.stringify)) {
-            if (true) {
+            if (false) {
               throw new Error(
                 "PostCSS syntaxes cannot be used as plugins. Instead, please use one of the syntax/parser/stringifier options as outlined in your PostCSS runner documentation."
               );
@@ -55169,7 +55169,7 @@ function delay(t, v) {
     setTimeout(resolve.bind(null, v), t);
   });
 }
-var IS_DEV = true;
+var IS_DEV = false;
 import_loglevel13.default.setLevel(IS_DEV ? "trace" : "warn", true);
 
 // src/modules/protection/ContentProtectionModule.ts
@@ -61727,8 +61727,10 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
               secondSpread.style.boxShadow = "0 0 8px 2px #ccc";
             }
           } else {
-            this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
-            this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+            if (this.settings.fixedLayoutShadow) {
+              this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
+              this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+            }
           }
         } else {
           this.iframes[0].style.paddingTop = (((_a = this.attributes) == null ? void 0 : _a.iframePaddingTop) ?? 0) + "px";
@@ -63373,8 +63375,10 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
             this.spreads.removeChild(this.spreads.lastChild);
           }
         }
-        this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
-        this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+        if (this.settings.fixedLayoutShadow) {
+          this.firstSpread.style.clipPath = "polygon(0% -20%, 100% -20%, 120% 100%, -20% 120%)";
+          this.firstSpread.style.boxShadow = "0 0 8px 2px #ccc";
+        }
       }
       this.precessContentForIframe();
     }
