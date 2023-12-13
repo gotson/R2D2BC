@@ -69,7 +69,7 @@ export declare class TextHighlighter {
     activeAnnotationMarkerId?: string;
     static create(config: TextHighlighterConfig): Promise<any>;
     private constructor();
-    initialize(): Promise<void>;
+    initialize(iframe: HTMLIFrameElement): Promise<void>;
     /**
      * Returns true if elements a i b have the same color.
      * @param {Node} a

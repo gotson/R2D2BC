@@ -35,6 +35,7 @@ export interface IUserSettings {
     verticalScroll: boolean;
     textAlignment: number;
     columnCount: number;
+    direction: number;
     wordSpacing: number;
     letterSpacing: number;
     pageMargins: number;
@@ -55,6 +56,7 @@ export interface InitialUserSettings {
     verticalScroll?: boolean | "readium-scroll-on" | "readium-scroll-off" | "scroll" | "paginated";
     textAlignment: number;
     columnCount: number;
+    direction: string;
     wordSpacing: number;
     letterSpacing: number;
     pageMargins: number;
@@ -71,6 +73,7 @@ export declare class UserSettings implements IUserSettings {
     private static fontFamilyValues;
     private static readonly textAlignmentValues;
     private static readonly columnCountValues;
+    private static readonly directionValues;
     fontSize: number;
     fontOverride: boolean;
     fontFamily: number;
@@ -78,6 +81,7 @@ export declare class UserSettings implements IUserSettings {
     verticalScroll: boolean;
     textAlignment: number;
     columnCount: number;
+    direction: number;
     wordSpacing: number;
     letterSpacing: number;
     pageMargins: number;
@@ -125,6 +129,7 @@ export declare class UserSettings implements IUserSettings {
         fontFamily: string;
         textAlignment: string;
         columnCount: string;
+        direction: string;
         verticalScroll: boolean;
         fontSize: number;
         wordSpacing: number;

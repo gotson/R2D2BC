@@ -32,7 +32,7 @@ export default class LineFocusModule implements ReaderModule {
     private constructor();
     stop(): Promise<void>;
     protected start(): Promise<void>;
-    initialize(): Promise<unknown>;
+    initialize(iframe: HTMLIFrameElement): Promise<unknown>;
     private keydown;
     private keyup;
     handleResize(): void;

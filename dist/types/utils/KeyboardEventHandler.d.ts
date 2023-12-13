@@ -1,6 +1,7 @@
 import { IFrameNavigator } from "../navigator/IFrameNavigator";
 export default class KeyboardEventHandler {
     navigator: IFrameNavigator;
+    rtl: boolean;
     constructor(navigator: IFrameNavigator);
     onBackwardSwipe: (event: UIEvent) => void;
     onForwardSwipe: (event: UIEvent) => void;

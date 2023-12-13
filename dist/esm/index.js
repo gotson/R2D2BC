@@ -46044,6 +46044,7 @@ _ReadiumCSS.SCROLL_REF = "scroll";
 // static readonly PUBLISHER_DEFAULT_REF = "advancedSettings";
 _ReadiumCSS.TEXT_ALIGNMENT_REF = "textAlign";
 _ReadiumCSS.COLUMN_COUNT_REF = "colCount";
+_ReadiumCSS.DIRECTION_REF = "direction";
 _ReadiumCSS.WORD_SPACING_REF = "wordSpacing";
 _ReadiumCSS.LETTER_SPACING_REF = "letterSpacing";
 _ReadiumCSS.PAGE_MARGINS_REF = "pageMargins";
@@ -46057,6 +46058,7 @@ _ReadiumCSS.SCROLL_KEY = "--USER__" + _ReadiumCSS.SCROLL_REF;
 //   "--USER__" + ReadiumCSS.PUBLISHER_DEFAULT_REF;
 _ReadiumCSS.TEXT_ALIGNMENT_KEY = "--USER__" + _ReadiumCSS.TEXT_ALIGNMENT_REF;
 _ReadiumCSS.COLUMN_COUNT_KEY = "--USER__" + _ReadiumCSS.COLUMN_COUNT_REF;
+_ReadiumCSS.DIRECTION_KEY = "--USER__" + _ReadiumCSS.DIRECTION_REF;
 _ReadiumCSS.WORD_SPACING_KEY = "--USER__" + _ReadiumCSS.WORD_SPACING_REF;
 _ReadiumCSS.LETTER_SPACING_KEY = "--USER__" + _ReadiumCSS.LETTER_SPACING_REF;
 _ReadiumCSS.PAGE_MARGINS_KEY = "--USER__" + _ReadiumCSS.PAGE_MARGINS_REF;
@@ -47018,6 +47020,7 @@ var _UserSettings = class _UserSettings {
     // publisherDefaults = true;
     this.textAlignment = 0;
     this.columnCount = 0;
+    this.direction = 0;
     this.wordSpacing = 0;
     this.letterSpacing = 0;
     this.pageMargins = 2;
@@ -47142,6 +47145,17 @@ var _UserSettings = class _UserSettings {
         }
         import_loglevel2.default.log(settings.columnCount);
       }
+      if (initialUserSettings.direction) {
+        settings.direction = _UserSettings.directionValues.findIndex(
+          (el) => el === initialUserSettings.direction
+        );
+        let prop = settings.userProperties.getByRef(ReadiumCSS.DIRECTION_REF);
+        if (prop) {
+          prop.value = settings.direction;
+          await settings.saveProperty(prop);
+        }
+        import_loglevel2.default.log(settings.direction);
+      }
       if (initialUserSettings.wordSpacing) {
         settings.wordSpacing = initialUserSettings.wordSpacing;
         let prop = settings.userProperties.getByRef(
@@ -47239,6 +47253,10 @@ var _UserSettings = class _UserSettings {
       "columnCount",
       ReadiumCSS.COLUMN_COUNT_KEY
     );
+    this.direction = await this.getPropertyAndFallback(
+      "columnCount",
+      ReadiumCSS.DIRECTION_KEY
+    );
     this.fontSize = await this.getPropertyAndFallback(
       "fontSize",
       ReadiumCSS.FONT_SIZE_KEY
@@ -47277,6 +47295,7 @@ var _UserSettings = class _UserSettings {
     this.fontFamily = 0;
     this.textAlignment = 0;
     this.columnCount = 0;
+    this.direction = 0;
     this.wordSpacing = 0;
     this.letterSpacing = 0;
     this.pageMargins = 2;
@@ -47297,6 +47316,7 @@ var _UserSettings = class _UserSettings {
         html.style.removeProperty(ReadiumCSS.WORD_SPACING_KEY);
         html.style.removeProperty(ReadiumCSS.LETTER_SPACING_KEY);
         html.style.removeProperty(ReadiumCSS.COLUMN_COUNT_KEY);
+        html.style.removeProperty(ReadiumCSS.DIRECTION_KEY);
         html.style.removeProperty(ReadiumCSS.TEXT_ALIGNMENT_KEY);
         html.style.removeProperty(ReadiumCSS.LINE_HEIGHT_KEY);
         html.style.removeProperty(ReadiumCSS.PAGE_MARGINS_KEY);
@@ -47323,7 +47343,7 @@ var _UserSettings = class _UserSettings {
       );
   }
   async applyProperties() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
     this.userProperties = this.getUserSettings();
     let doc = this.iframe.contentDocument;
     if (doc) {
@@ -47415,25 +47435,32 @@ var _UserSettings = class _UserSettings {
           if (body)
             setAttr(body, "data-viewer-theme", "day");
         }
-        if ((_p = this.view) == null ? void 0 : _p.navigator.publication.isReflowable) {
+        if ((_p = this.view) == null ? void 0 : _p.navigator.publication.isFixedLayout) {
+          if (await this.getProperty(ReadiumCSS.DIRECTION_KEY)) {
+            let value = ((_q = this.userProperties.getByRef(ReadiumCSS.DIRECTION_REF)) == null ? void 0 : _q.toString()) ?? null;
+            html.style.setProperty(ReadiumCSS.DIRECTION_KEY, value);
+            this.view.navigator.setDirection(value);
+          }
+        }
+        if ((_r = this.view) == null ? void 0 : _r.navigator.publication.isReflowable) {
           if (await this.getProperty(ReadiumCSS.FONT_FAMILY_KEY)) {
             html.style.setProperty(
               ReadiumCSS.FONT_FAMILY_KEY,
-              ((_q = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _q.toString()) ?? null
+              ((_s = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _s.toString()) ?? null
             );
-            if (((_r = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _r.value) === 0) {
+            if (((_t = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _t.value) === 0) {
               setAttr(html, "data-viewer-font", "publisher");
               html.style.setProperty(
                 ReadiumCSS.FONT_OVERRIDE_KEY,
                 "readium-font-off"
               );
-            } else if (((_s = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _s.value) === 1) {
+            } else if (((_u = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _u.value) === 1) {
               setAttr(html, "data-viewer-font", "serif");
               html.style.setProperty(
                 ReadiumCSS.FONT_OVERRIDE_KEY,
                 "readium-font-on"
               );
-            } else if (((_t = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _t.value) === 2) {
+            } else if (((_v = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _v.value) === 2) {
               setAttr(html, "data-viewer-font", "sans");
               html.style.setProperty(
                 ReadiumCSS.FONT_OVERRIDE_KEY,
@@ -47458,7 +47485,7 @@ var _UserSettings = class _UserSettings {
           } else {
             html.style.setProperty(
               ReadiumCSS.FONT_FAMILY_KEY,
-              ((_u = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _u.toString()) ?? null
+              ((_w = this.userProperties.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _w.toString()) ?? null
             );
             setAttr(html, "data-viewer-font", "publisher");
             html.style.setProperty(
@@ -47467,7 +47494,7 @@ var _UserSettings = class _UserSettings {
             );
           }
           if (await this.getProperty(ReadiumCSS.SCROLL_KEY)) {
-            if (((_v = this.userProperties.getByRef(ReadiumCSS.SCROLL_REF)) == null ? void 0 : _v.value) === true) {
+            if (((_x = this.userProperties.getByRef(ReadiumCSS.SCROLL_REF)) == null ? void 0 : _x.value) === true) {
               html.style.setProperty("--USER__scroll", "readium-scroll-on");
             } else {
               html.style.setProperty("--USER__scroll", "readium-scroll-off");
@@ -47534,24 +47561,25 @@ var _UserSettings = class _UserSettings {
     this.applyProperties();
   }
   async updateUserSettings() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t;
     let userSettings = {
       fontFamily: _UserSettings.fontFamilyValues[await ((_b = (_a = this.userProperties) == null ? void 0 : _a.getByRef(ReadiumCSS.FONT_FAMILY_REF)) == null ? void 0 : _b.value)],
       fontSize: (_d = (_c = this.userProperties) == null ? void 0 : _c.getByRef(ReadiumCSS.FONT_SIZE_REF)) == null ? void 0 : _d.value,
       appearance: _UserSettings.appearanceValues[await ((_f = (_e = this.userProperties) == null ? void 0 : _e.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _f.value)],
       textAlignment: _UserSettings.textAlignmentValues[await ((_h = (_g = this.userProperties) == null ? void 0 : _g.getByRef(ReadiumCSS.TEXT_ALIGNMENT_REF)) == null ? void 0 : _h.value)],
       columnCount: _UserSettings.columnCountValues[await ((_j = (_i = this.userProperties) == null ? void 0 : _i.getByRef(ReadiumCSS.COLUMN_COUNT_REF)) == null ? void 0 : _j.value)],
-      wordSpacing: (_l = (_k = this.userProperties) == null ? void 0 : _k.getByRef(ReadiumCSS.WORD_SPACING_REF)) == null ? void 0 : _l.value,
-      letterSpacing: (_n = (_m = this.userProperties) == null ? void 0 : _m.getByRef(
+      direction: _UserSettings.directionValues[await ((_l = (_k = this.userProperties) == null ? void 0 : _k.getByRef(ReadiumCSS.DIRECTION_REF)) == null ? void 0 : _l.value)],
+      wordSpacing: (_n = (_m = this.userProperties) == null ? void 0 : _m.getByRef(ReadiumCSS.WORD_SPACING_REF)) == null ? void 0 : _n.value,
+      letterSpacing: (_p = (_o = this.userProperties) == null ? void 0 : _o.getByRef(
         ReadiumCSS.LETTER_SPACING_REF
-      )) == null ? void 0 : _n.value,
+      )) == null ? void 0 : _p.value,
       // publisherDefault: this.userProperties.getByRef(
       //   ReadiumCSS.PUBLISHER_DEFAULT_REF
       // ).value,
-      verticalScroll: (_p = (_o = this.userProperties) == null ? void 0 : _o.getByRef(ReadiumCSS.SCROLL_REF)) == null ? void 0 : _p.value
+      verticalScroll: (_r = (_q = this.userProperties) == null ? void 0 : _q.getByRef(ReadiumCSS.SCROLL_REF)) == null ? void 0 : _r.value
     };
-    if ((_q = this.api) == null ? void 0 : _q.updateSettings) {
-      (_r = this.api) == null ? void 0 : _r.updateSettings(userSettings).then((_) => {
+    if ((_s = this.api) == null ? void 0 : _s.updateSettings) {
+      (_t = this.api) == null ? void 0 : _t.updateSettings(userSettings).then((_) => {
         import_loglevel2.default.log("api updated user settings", JSON.stringify(userSettings));
       });
     }
@@ -47570,6 +47598,12 @@ var _UserSettings = class _UserSettings {
       _UserSettings.columnCountValues,
       ReadiumCSS.COLUMN_COUNT_REF,
       ReadiumCSS.COLUMN_COUNT_KEY
+    );
+    userProperties.addEnumerable(
+      this.direction,
+      _UserSettings.directionValues,
+      ReadiumCSS.DIRECTION_REF,
+      ReadiumCSS.DIRECTION_KEY
     );
     userProperties.addEnumerable(
       this.appearance,
@@ -47700,7 +47734,7 @@ var _UserSettings = class _UserSettings {
     this.settingsChangeCallback();
   }
   get currentSettings() {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     return {
       appearance: _UserSettings.appearanceValues[(_b = (_a = this.userProperties) == null ? void 0 : _a.getByRef(ReadiumCSS.APPEARANCE_REF)) == null ? void 0 : _b.value],
       //readium-default-on, readium-night-on, readium-sepia-on
@@ -47710,6 +47744,8 @@ var _UserSettings = class _UserSettings {
       //"auto", "justify", "start"
       columnCount: _UserSettings.columnCountValues[(_h = (_g = this.userProperties) == null ? void 0 : _g.getByRef(ReadiumCSS.COLUMN_COUNT_REF)) == null ? void 0 : _h.value],
       // "auto", "1", "2"
+      direction: _UserSettings.directionValues[(_j = (_i = this.userProperties) == null ? void 0 : _i.getByRef(ReadiumCSS.DIRECTION_REF)) == null ? void 0 : _j.value],
+      // "auto", "ltr", "rtl"
       verticalScroll: this.verticalScroll,
       fontSize: this.fontSize,
       wordSpacing: this.wordSpacing,
@@ -47721,7 +47757,7 @@ var _UserSettings = class _UserSettings {
     };
   }
   async applyUserSettings(userSettings) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
     if (userSettings.appearance) {
       this.appearance = _UserSettings.parseAppearanceSetting(
         userSettings.appearance
@@ -47777,11 +47813,21 @@ var _UserSettings = class _UserSettings {
       }
       this.settingsColumnsChangeCallback();
     }
+    if (userSettings.direction) {
+      this.direction = _UserSettings.directionValues.findIndex(
+        (el) => el === userSettings.direction
+      );
+      let prop = (_g = this.userProperties) == null ? void 0 : _g.getByRef(ReadiumCSS.DIRECTION_REF);
+      if (prop) {
+        prop.value = this.direction;
+        await this.storeProperty(prop);
+      }
+    }
     if (userSettings.textAlignment) {
       this.textAlignment = _UserSettings.textAlignmentValues.findIndex(
         (el) => el === userSettings.textAlignment
       );
-      let prop = (_g = this.userProperties) == null ? void 0 : _g.getByRef(ReadiumCSS.TEXT_ALIGNMENT_REF);
+      let prop = (_h = this.userProperties) == null ? void 0 : _h.getByRef(ReadiumCSS.TEXT_ALIGNMENT_REF);
       if (prop) {
         prop.value = this.textAlignment;
         await this.storeProperty(prop);
@@ -47789,7 +47835,7 @@ var _UserSettings = class _UserSettings {
     }
     if (userSettings.lineHeight) {
       this.lineHeight = userSettings.lineHeight;
-      let prop = (_h = this.userProperties) == null ? void 0 : _h.getByRef(ReadiumCSS.LINE_HEIGHT_REF);
+      let prop = (_i = this.userProperties) == null ? void 0 : _i.getByRef(ReadiumCSS.LINE_HEIGHT_REF);
       if (prop) {
         prop.value = this.lineHeight;
         await this.storeProperty(prop);
@@ -47797,7 +47843,7 @@ var _UserSettings = class _UserSettings {
     }
     if ("fixedLayoutMargin" in userSettings) {
       this.fixedLayoutMargin = userSettings.fixedLayoutMargin;
-      let prop = (_i = this.userProperties) == null ? void 0 : _i.getByRef(R2D2BC.FIXED_LAYOUT_MARGIN_REF);
+      let prop = (_j = this.userProperties) == null ? void 0 : _j.getByRef(R2D2BC.FIXED_LAYOUT_MARGIN_REF);
       if (prop) {
         prop.value = this.fixedLayoutMargin;
         await this.storeProperty(prop);
@@ -47805,7 +47851,7 @@ var _UserSettings = class _UserSettings {
     }
     if ("fixedLayoutShadow" in userSettings) {
       this.fixedLayoutShadow = userSettings.fixedLayoutShadow;
-      let prop = (_j = this.userProperties) == null ? void 0 : _j.getByRef(R2D2BC.FIXED_LAYOUT_SHADOW_REF);
+      let prop = (_k = this.userProperties) == null ? void 0 : _k.getByRef(R2D2BC.FIXED_LAYOUT_SHADOW_REF);
       if (prop) {
         prop.value = this.lineHeight;
         await this.storeProperty(prop);
@@ -47813,25 +47859,25 @@ var _UserSettings = class _UserSettings {
     }
     if (userSettings.pageMargins) {
       this.pageMargins = userSettings.pageMargins;
-      let prop = (_k = this.userProperties) == null ? void 0 : _k.getByRef(ReadiumCSS.PAGE_MARGINS_REF);
+      let prop = (_l = this.userProperties) == null ? void 0 : _l.getByRef(ReadiumCSS.PAGE_MARGINS_REF);
       if (prop) {
         prop.value = this.pageMargins;
         await this.storeProperty(prop);
       }
     }
     if (userSettings.verticalScroll !== void 0) {
-      const position = (_l = this.view) == null ? void 0 : _l.getCurrentPosition();
+      const position = (_m = this.view) == null ? void 0 : _m.getCurrentPosition();
       this.verticalScroll = _UserSettings.parseScrollSetting(
         userSettings.verticalScroll
       );
-      let prop = (_m = this.userProperties) == null ? void 0 : _m.getByRef(ReadiumCSS.SCROLL_REF);
+      let prop = (_n = this.userProperties) == null ? void 0 : _n.getByRef(ReadiumCSS.SCROLL_REF);
       if (prop) {
         prop.value = this.verticalScroll;
         await this.saveProperty(prop);
       }
-      (_o = (_n = this.view) == null ? void 0 : _n.setMode) == null ? void 0 : _o.call(_n, this.verticalScroll);
+      (_p = (_o = this.view) == null ? void 0 : _o.setMode) == null ? void 0 : _p.call(_o, this.verticalScroll);
       if (position) {
-        (_p = this.view) == null ? void 0 : _p.goToProgression(position);
+        (_q = this.view) == null ? void 0 : _q.goToProgression(position);
       }
       this.viewChangeCallback();
     }
@@ -47988,6 +48034,7 @@ _UserSettings.appearanceValues = [
 _UserSettings.fontFamilyValues = ["Original", "serif", "sans-serif"];
 _UserSettings.textAlignmentValues = ["auto", "justify", "start"];
 _UserSettings.columnCountValues = ["auto", "1", "2"];
+_UserSettings.directionValues = ["auto", "ltr", "rtl"];
 var UserSettings = _UserSettings;
 
 // src/modules/AnnotationModule.ts
@@ -49721,17 +49768,13 @@ var TextHighlighter = class _TextHighlighter {
     );
     return new Promise((resolve) => resolve(module2));
   }
-  async initialize() {
+  async initialize(iframe) {
     var _a;
-    let doc = this.navigator.iframes[0].contentDocument;
+    let doc = iframe.contentDocument;
     if (doc) {
       this.dom(doc.body).addClass(this.options.contextClass);
     }
-    this.bindEvents(
-      (_a = this.navigator.iframes[0].contentDocument) == null ? void 0 : _a.body,
-      this,
-      this.hasEventListener
-    );
+    this.bindEvents((_a = iframe.contentDocument) == null ? void 0 : _a.body, this, this.hasEventListener);
     this.initializeToolbox();
     lastMouseDownX = -1;
     lastMouseDownY = -1;
@@ -49744,7 +49787,7 @@ var TextHighlighter = class _TextHighlighter {
     }
     setTimeout(async () => {
       var _a2;
-      let doc2 = this.navigator.iframes[0].contentDocument;
+      let doc2 = iframe.contentDocument;
       if (doc2) {
         await ((_a2 = doc2.body) == null ? void 0 : _a2.addEventListener("click", unselect));
       }
@@ -52368,8 +52411,8 @@ var ConsumptionModule = class {
     import_loglevel7.default.log("Consumption module stop");
     this.endResearchSession();
   }
-  initialize() {
-    let win = this.navigator.iframes[0].contentWindow;
+  initialize(iframe) {
+    let win = iframe.contentWindow;
     if (win) {
       const self2 = this;
       win.onload = function() {
@@ -52603,7 +52646,7 @@ var AnnotationModule = class _AnnotationModule {
       await this.showHighlights();
     }, 200);
   }
-  initialize() {
+  initialize(iframe) {
     return new Promise(async (resolve) => {
       await document.fonts.ready;
       if (this.rights.enableAnnotations) {
@@ -52612,7 +52655,7 @@ var AnnotationModule = class _AnnotationModule {
           this.drawHighlights();
           this.showHighlights();
           addEventListenerOptional(
-            (_a = this.navigator.iframes[0].contentDocument) == null ? void 0 : _a.body,
+            (_a = iframe.contentDocument) == null ? void 0 : _a.body,
             "click",
             this.click.bind(this)
           );
@@ -57153,35 +57196,33 @@ var ContentProtectionModule = class {
       this.preventDrag(true);
     }
   }
-  async initialize() {
+  async initialize(iframe) {
     var _a;
     if ((_a = this.properties) == null ? void 0 : _a.enableObfuscation) {
       return new Promise(async (resolve) => {
         await document.fonts.ready;
-        for (const iframe of this.navigator.iframes) {
-          if (iframe.contentDocument) {
-            const body = findRequiredIframeElement(
-              iframe.contentDocument,
-              "body"
+        if (iframe.contentDocument) {
+          const body = findRequiredIframeElement(
+            iframe.contentDocument,
+            "body"
+          );
+          this.observe();
+          setTimeout(() => {
+            this.rects = this.findRects(body);
+            this.rects.forEach(
+              (rect) => this.toggleRect(rect, this.securityContainer, this.isHacked)
             );
-            this.observe();
-            setTimeout(() => {
-              this.rects = this.findRects(body);
-              this.rects.forEach(
-                (rect) => this.toggleRect(rect, this.securityContainer, this.isHacked)
+            this.setupEvents();
+            if (!this.hasEventListener) {
+              this.hasEventListener = true;
+              addEventListenerOptional(
+                this.wrapper,
+                "scroll",
+                this.handleScroll.bind(this)
               );
-              this.setupEvents();
-              if (!this.hasEventListener) {
-                this.hasEventListener = true;
-                addEventListenerOptional(
-                  this.wrapper,
-                  "scroll",
-                  this.handleScroll.bind(this)
-                );
-              }
-              resolve();
-            }, 10);
-          }
+            }
+            resolve();
+          }, 10);
         }
       });
     }
@@ -58973,6 +59014,7 @@ var KeyboardEventHandler = class {
     // when removing the event listeners
     this.handlers = {};
     this.navigator = navigator2;
+    this.rtl = false;
   }
   onFocusIn(self2) {
     return this.handlers["onFocusIn"] || (this.handlers["onFocusIn"] = function(event) {
@@ -58995,10 +59037,10 @@ var KeyboardEventHandler = class {
       const key = event.key;
       switch (key) {
         case "ArrowRight":
-          self2.onForwardSwipe(event);
+          self2.rtl ? self2.onBackwardSwipe(event) : self2.onForwardSwipe(event);
           return;
         case "ArrowLeft":
-          self2.onBackwardSwipe(event);
+          self2.rtl ? self2.onForwardSwipe(event) : self2.onBackwardSwipe(event);
           return;
       }
       switch (event.code) {
@@ -60590,7 +60632,7 @@ var LineFocusModule = class {
       }
     }
   }
-  initialize() {
+  initialize(iframe) {
     return new Promise(async (resolve) => {
       await document.fonts.ready;
       if (!this.hasEventListener) {
@@ -60598,12 +60640,12 @@ var LineFocusModule = class {
         addEventListenerOptional(document, "keydown", this.keydown.bind(this));
         addEventListenerOptional(document, "keyup", this.keyup.bind(this));
         addEventListenerOptional(
-          this.navigator.iframes[0].contentDocument,
+          iframe.contentDocument,
           "keydown",
           this.keydown.bind(this)
         );
         addEventListenerOptional(
-          this.navigator.iframes[0].contentDocument,
+          iframe.contentDocument,
           "keyup",
           this.keyup.bind(this)
         );
@@ -61664,6 +61706,24 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
     if (this.didInitKeyboardEventHandler)
       this.keyboardEventHandler.removeEvents(document);
   }
+  setDirection(direction) {
+    var _a, _b;
+    let dir = "";
+    if (direction === "rtl" || direction === "ltr")
+      dir = direction;
+    if (direction === "auto")
+      dir = this.publication.Metadata.Direction2;
+    if (dir) {
+      if (dir === "rtl")
+        this.spreads.style.flexDirection = "row-reverse";
+      if (dir === "ltr")
+        this.spreads.style.flexDirection = "row";
+      this.keyboardEventHandler.rtl = dir === "rtl";
+      if ((_a = this.api) == null ? void 0 : _a.direction)
+        (_b = this.api) == null ? void 0 : _b.direction(dir);
+      this.emit("direction", dir);
+    }
+  }
   async start(mainElement, headerMenu, footerMenu) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
     this.headerMenu = headerMenu;
@@ -61703,6 +61763,19 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           this.spreads.appendChild(this.firstSpread);
           this.firstSpread.appendChild(this.iframes[0]);
           wrapper.appendChild(this.spreads);
+          let dir = "";
+          switch (this.settings.direction) {
+            case 0:
+              dir = "auto";
+              break;
+            case 1:
+              dir = "ltr";
+              break;
+            case 2:
+              dir = "rtl";
+              break;
+          }
+          this.setDirection(dir);
         } else {
           iframe3.setAttribute("height", "100%");
           iframe3.setAttribute("width", "100%");
@@ -61972,7 +62045,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       addEventListenerOptional(
         iframe,
         "load",
-        this.handleIFrameLoad.bind(this)
+        this.handleIFrameLoad.bind(this, iframe)
       );
     }
     addEventListenerOptional(
@@ -62036,6 +62109,9 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
         this.nextChapterBottomAnchorElement.style.display = "none";
       if (this.previousChapterTopAnchorElement)
         this.previousChapterTopAnchorElement.style.display = "none";
+      if (this.eventHandler) {
+        this.eventHandler.onClickThrough = this.handleClickThrough.bind(this);
+      }
       if (this.keyboardEventHandler) {
         this.keyboardEventHandler.onBackwardSwipe = this.handlePreviousChapterClick.bind(this);
         this.keyboardEventHandler.onForwardSwipe = this.handleNextChapterClick.bind(this);
@@ -62347,8 +62423,8 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       });
     }
   }
-  async handleIFrameLoad() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  async handleIFrameLoad(iframe) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
     if (this.errorMessage)
       this.errorMessage.style.display = "none";
     this.showLoadingMessageAfterDelay();
@@ -62444,54 +62520,52 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           (_d = this.api) == null ? void 0 : _d.chapterInfo(void 0);
         this.emit("chapterinfo", void 0);
       }
-      await this.injectInjectablesIntoIframeHead();
-      if (this.highlighter !== void 0) {
-        await this.highlighter.initialize();
+      await this.injectInjectablesIntoIframeHead(iframe);
+      if (((_e = this.view) == null ? void 0 : _e.layout) !== "fixed" && this.highlighter !== void 0) {
+        await this.highlighter.initialize(iframe);
       }
-      const body = (_e = this.iframes[0].contentDocument) == null ? void 0 : _e.body;
+      const body = (_f = iframe.contentDocument) == null ? void 0 : _f.body;
       let details = body == null ? void 0 : body.querySelector("details");
       if (details) {
         let self2 = this;
         details.addEventListener("toggle", async (_event) => {
           var _a2, _b2;
-          await ((_b2 = (_a2 = self2.view) == null ? void 0 : _a2.setIframeHeight) == null ? void 0 : _b2.call(_a2, this.iframes[0]));
+          await ((_b2 = (_a2 = self2.view) == null ? void 0 : _a2.setIframeHeight) == null ? void 0 : _b2.call(_a2, iframe));
         });
       }
       if (this.eventHandler) {
-        for (const iframe of this.iframes) {
-          this.eventHandler.setupEvents(iframe.contentDocument);
-          this.touchEventHandler.setupEvents(iframe.contentDocument);
-          this.keyboardEventHandler.setupEvents(iframe.contentDocument);
-        }
+        this.eventHandler.setupEvents(iframe.contentDocument);
+        this.touchEventHandler.setupEvents(iframe.contentDocument);
+        this.keyboardEventHandler.setupEvents(iframe.contentDocument);
         this.touchEventHandler.setupEvents(this.errorMessage);
         if (!this.didInitKeyboardEventHandler) {
           this.keyboardEventHandler.keydown(document);
           this.didInitKeyboardEventHandler = true;
         }
       }
-      if (((_f = this.view) == null ? void 0 : _f.layout) !== "fixed") {
-        if ((_g = this.view) == null ? void 0 : _g.isScrollMode()) {
-          this.iframes[0].height = "0";
-          (_i = (_h = this.view) == null ? void 0 : _h.setIframeHeight) == null ? void 0 : _i.call(_h, this.iframes[0]);
+      if (((_g = this.view) == null ? void 0 : _g.layout) !== "fixed") {
+        if ((_h = this.view) == null ? void 0 : _h.isScrollMode()) {
+          iframe.height = "0";
+          (_j = (_i = this.view) == null ? void 0 : _i.setIframeHeight) == null ? void 0 : _j.call(_i, iframe);
         }
       }
       if (this.rights.enableContentProtection && this.contentProtectionModule) {
-        await this.contentProtectionModule.initialize();
+        await this.contentProtectionModule.initialize(iframe);
       }
       if (this.rights.enableConsumption && this.consumptionModule) {
-        await this.consumptionModule.initialize();
+        await this.consumptionModule.initialize(iframe);
       }
       if (this.rights.enableAnnotations && this.annotationModule) {
-        await this.annotationModule.initialize();
+        await this.annotationModule.initialize(iframe);
       }
       if (this.rights.enableBookmarks && this.bookmarkModule) {
         await this.bookmarkModule.initialize();
       }
       if (this.rights.enableLineFocus && this.lineFocusModule) {
-        await this.lineFocusModule.initialize();
+        await this.lineFocusModule.initialize(iframe);
       }
       if (this.rights.enableTTS && this.ttsModule) {
-        const body2 = (_j = this.iframes[0].contentDocument) == null ? void 0 : _j.body;
+        const body2 = (_k = iframe.contentDocument) == null ? void 0 : _k.body;
         const ttsModule = this.ttsModule;
         await ttsModule.initialize(body2);
       }
@@ -62504,7 +62578,9 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       setTimeout(async () => {
         var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
         if (this.newElementId) {
-          const element = this.iframes[0].contentDocument.getElementById(this.newElementId);
+          const element = iframe.contentDocument.getElementById(
+            this.newElementId
+          );
           (_b2 = (_a2 = this.view) == null ? void 0 : _a2.goToElement) == null ? void 0 : _b2.call(_a2, element);
           this.newElementId = void 0;
         } else if (this.newPosition && this.newPosition.highlight) {
@@ -62522,7 +62598,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
           }
         }
         this.hideLoadingMessage();
-        this.showIframeContents();
+        this.showIframeContents(iframe);
         if (this.rights.enableMediaOverlays && this.mediaOverlayModule && this.hasMediaOverlays) {
           let link = this.currentLink();
           await ((_g2 = this.mediaOverlayModule) == null ? void 0 : _g2.initializeResource(link));
@@ -62542,7 +62618,7 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       return Promise.reject(err);
     }
   }
-  async injectInjectablesIntoIframeHead() {
+  async injectInjectablesIntoIframeHead(iframe) {
     var _a, _b;
     const injectablesToLoad = [];
     const addLoadingInjectable = (injectable) => {
@@ -62557,55 +62633,53 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       });
       injectablesToLoad.push(loadPromise);
     };
-    for (const iframe of this.iframes) {
-      const head = (_a = iframe.contentDocument) == null ? void 0 : _a.head;
-      if (head) {
-        const bases = iframe.contentDocument.getElementsByTagName("base");
-        if (bases.length === 0) {
-          head.insertBefore(
-            _IFrameNavigator.createBase(this.currentChapterLink.href),
-            head.firstChild
-          );
-        }
-        (_b = this.injectables) == null ? void 0 : _b.forEach((injectable) => {
-          if (injectable.type === "style") {
-            if (injectable.fontFamily) {
-              this.settings.initAddedFont();
-              if (!injectable.systemFont && injectable.url) {
-                const link = _IFrameNavigator.createCssLink(injectable.url);
-                head.appendChild(link);
-                addLoadingInjectable(link);
-              }
-            } else if (injectable.r2before && injectable.url) {
-              const link = _IFrameNavigator.createCssLink(injectable.url);
-              head.insertBefore(link, head.firstChild);
-              addLoadingInjectable(link);
-            } else if (injectable.r2default && injectable.url) {
-              const link = _IFrameNavigator.createCssLink(injectable.url);
-              head.insertBefore(link, head.childNodes[1]);
-              addLoadingInjectable(link);
-            } else if (injectable.r2after && injectable.url) {
-              if (injectable.appearance) {
-                this.settings.initAddedAppearance();
-              }
-              const link = _IFrameNavigator.createCssLink(injectable.url);
-              head.appendChild(link);
-              addLoadingInjectable(link);
-            } else if (injectable.url) {
+    const head = (_a = iframe.contentDocument) == null ? void 0 : _a.head;
+    if (head) {
+      const bases = iframe.contentDocument.getElementsByTagName("base");
+      if (bases.length === 0) {
+        head.insertBefore(
+          _IFrameNavigator.createBase(this.currentChapterLink.href),
+          head.firstChild
+        );
+      }
+      (_b = this.injectables) == null ? void 0 : _b.forEach((injectable) => {
+        if (injectable.type === "style") {
+          if (injectable.fontFamily) {
+            this.settings.initAddedFont();
+            if (!injectable.systemFont && injectable.url) {
               const link = _IFrameNavigator.createCssLink(injectable.url);
               head.appendChild(link);
               addLoadingInjectable(link);
             }
-          } else if (injectable.type === "script" && injectable.url) {
-            const script = _IFrameNavigator.createJavascriptLink(
-              injectable.url,
-              injectable.async ?? false
-            );
-            head.appendChild(script);
-            addLoadingInjectable(script);
+          } else if (injectable.r2before && injectable.url) {
+            const link = _IFrameNavigator.createCssLink(injectable.url);
+            head.insertBefore(link, head.firstChild);
+            addLoadingInjectable(link);
+          } else if (injectable.r2default && injectable.url) {
+            const link = _IFrameNavigator.createCssLink(injectable.url);
+            head.insertBefore(link, head.childNodes[1]);
+            addLoadingInjectable(link);
+          } else if (injectable.r2after && injectable.url) {
+            if (injectable.appearance) {
+              this.settings.initAddedAppearance();
+            }
+            const link = _IFrameNavigator.createCssLink(injectable.url);
+            head.appendChild(link);
+            addLoadingInjectable(link);
+          } else if (injectable.url) {
+            const link = _IFrameNavigator.createCssLink(injectable.url);
+            head.appendChild(link);
+            addLoadingInjectable(link);
           }
-        });
-      }
+        } else if (injectable.type === "script" && injectable.url) {
+          const script = _IFrameNavigator.createJavascriptLink(
+            injectable.url,
+            injectable.async ?? false
+          );
+          head.appendChild(script);
+          addLoadingInjectable(script);
+        }
+      });
     }
     if (injectablesToLoad.length === 0) {
       return;
@@ -62923,21 +62997,21 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
               }
             } else {
               this.iframes[0].src = "about:blank";
-            }
-            if (this.iframes.length === 2) {
-              this.currentSpreadLinks.right = {
-                href: this.currentChapterLink.href
-              };
-              if (isSameOrigin) {
-                this.iframes[1].src = this.currentChapterLink.href;
-              } else {
-                fetch(this.currentChapterLink.href, this.requestConfig).then((r) => r.text()).then(async (content) => {
-                  writeIframe2Doc.call(
-                    this,
-                    content,
-                    this.currentChapterLink.href
-                  );
-                });
+              if (this.iframes.length === 2) {
+                this.currentSpreadLinks.right = {
+                  href: this.currentChapterLink.href
+                };
+                if (isSameOrigin) {
+                  this.iframes[1].src = this.currentChapterLink.href;
+                } else {
+                  fetch(this.currentChapterLink.href, this.requestConfig).then((r) => r.text()).then(async (content) => {
+                    writeIframe2Doc.call(
+                      this,
+                      content,
+                      this.currentChapterLink.href
+                    );
+                  });
+                }
               }
             }
           }
@@ -63888,15 +63962,13 @@ var IFrameNavigator = class _IFrameNavigator extends eventemitter3_default {
       }
     }
   }
-  showIframeContents() {
+  showIframeContents(iframe) {
     this.isBeingStyled = false;
     setTimeout(() => {
       if (!this.isBeingStyled) {
-        this.iframes.forEach((iframe) => {
-          iframe.style.opacity = "1";
-          iframe.style.border = "none";
-          iframe.style.overflow = "hidden";
-        });
+        iframe.style.opacity = "1";
+        iframe.style.border = "none";
+        iframe.style.overflow = "hidden";
       }
     }, 150);
   }
@@ -65753,6 +65825,9 @@ var D2Reader = class _D2Reader {
   get annotations() {
     var _a;
     return (_a = this.annotationModule) == null ? void 0 : _a.getAnnotations();
+  }
+  get publicationLayout() {
+    return this.navigator.publication.layout;
   }
   /** History */
   get history() {

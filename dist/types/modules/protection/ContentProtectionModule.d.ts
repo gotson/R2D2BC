@@ -56,7 +56,7 @@ export declare class ContentProtectionModule implements ReaderModule {
     activate(): Promise<void>;
     private setupEvents;
     initializeResource(): void;
-    initialize(): Promise<void>;
+    initialize(iframe: HTMLIFrameElement): Promise<void>;
     handleScroll(): void;
     handleResize(): void;
     disableContext(e: {

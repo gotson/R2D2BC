@@ -50,7 +50,7 @@ export declare class AnnotationModule implements ReaderModule {
     hideAnnotationLayer(): void;
     showAnnotationLayer(): void;
     handleResize(): Promise<void>;
-    initialize(): Promise<unknown>;
+    initialize(iframe: HTMLIFrameElement): Promise<unknown>;
     private click;
     scrollToHighlight(id: any): Promise<any>;
     updateLocalHighlight(annotation: Annotation): Promise<any>;

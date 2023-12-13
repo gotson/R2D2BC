@@ -107,6 +107,7 @@ export default class D2Reader {
     get bookmarks(): any;
     /** Current Annotations */
     get annotations(): any;
+    get publicationLayout(): any;
     /** History */
     get history(): Locator[] | undefined;
     /** Current index of history */
@@ -140,6 +141,7 @@ export default class D2Reader {
         fontFamily: string;
         textAlignment: string;
         columnCount: string;
+        direction: string;
         verticalScroll: boolean;
         fontSize: number;
         wordSpacing: number;

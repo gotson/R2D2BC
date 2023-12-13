@@ -39,6 +39,7 @@ export interface NavigatorAPI {
     clickThrough: any;
     positionInfo: any;
     chapterInfo: any;
+    direction: any;
     onError?: (e: Error) => void;
 }
 export interface IFrameAttributes {
@@ -218,6 +219,7 @@ export declare class IFrameNavigator extends EventEmitter implements Navigator {
     stop(): void;
     spreads: HTMLDivElement;
     firstSpread: HTMLDivElement;
+    setDirection(direction?: string | null): void;
     protected start(mainElement: HTMLElement, headerMenu?: HTMLElement | null, footerMenu?: HTMLElement | null): Promise<void>;
     timeout: any;
     onResize: () => void;

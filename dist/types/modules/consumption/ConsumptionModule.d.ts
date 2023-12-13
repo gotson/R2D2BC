@@ -47,7 +47,7 @@ export declare class ConsumptionModule implements ReaderModule {
     static create(config: ConsumptionModuleConfig): Promise<ConsumptionModule>;
     protected start(): Promise<void>;
     stop(): Promise<void>;
-    initialize(): void;
+    initialize(iframe: HTMLIFrameElement): void;
     trackAction(locator: Locator, action: Action): void;
     startReadingSession(locator: Locator): void;
     continueReadingSession(locator: Locator): void;

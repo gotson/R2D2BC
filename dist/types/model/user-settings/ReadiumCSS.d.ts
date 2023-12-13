@@ -6,6 +6,7 @@ export declare class ReadiumCSS {
     static readonly SCROLL_REF = "scroll";
     static readonly TEXT_ALIGNMENT_REF = "textAlign";
     static readonly COLUMN_COUNT_REF = "colCount";
+    static readonly DIRECTION_REF = "direction";
     static readonly WORD_SPACING_REF = "wordSpacing";
     static readonly LETTER_SPACING_REF = "letterSpacing";
     static readonly PAGE_MARGINS_REF = "pageMargins";
@@ -17,6 +18,7 @@ export declare class ReadiumCSS {
     static readonly SCROLL_KEY: string;
     static readonly TEXT_ALIGNMENT_KEY: string;
     static readonly COLUMN_COUNT_KEY: string;
+    static readonly DIRECTION_KEY: string;
     static readonly WORD_SPACING_KEY: string;
     static readonly LETTER_SPACING_KEY: string;
     static readonly PAGE_MARGINS_KEY: string;
