@@ -1012,6 +1012,9 @@ export class IFrameNavigator extends EventEmitter implements Navigator {
         this.nextChapterBottomAnchorElement.style.display = "none";
       if (this.previousChapterTopAnchorElement)
         this.previousChapterTopAnchorElement.style.display = "none";
+      if (this.eventHandler) {
+        this.eventHandler.onClickThrough = this.handleClickThrough.bind(this);
+      }
       if (this.keyboardEventHandler) {
         this.keyboardEventHandler.onBackwardSwipe =
           this.handlePreviousChapterClick.bind(this);
