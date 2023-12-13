@@ -122,6 +122,7 @@ export interface NavigatorAPI {
   clickThrough: any;
   positionInfo: any;
   chapterInfo: any;
+  direction: any;
   onError?: (e: Error) => void;
 }
 
@@ -536,6 +537,19 @@ export class IFrameNavigator extends EventEmitter implements Navigator {
   spreads: HTMLDivElement;
   firstSpread: HTMLDivElement;
 
+  setDirection(direction?: string | null) {
+    let dir = "";
+    if (direction === "rtl" || direction === "ltr") dir = direction;
+    if (direction === "auto") dir = this.publication.Metadata.Direction2;
+    if (dir) {
+      if (dir === "rtl") this.spreads.style.flexDirection = "row-reverse";
+      if (dir === "ltr") this.spreads.style.flexDirection = "row";
+      this.keyboardEventHandler.rtl = dir === "rtl";
+      if (this.api?.direction) this.api?.direction(dir);
+      this.emit("direction", dir);
+    }
+  }
+
   protected async start(
     mainElement: HTMLElement,
     headerMenu?: HTMLElement | null,
@@ -580,6 +594,19 @@ export class IFrameNavigator extends EventEmitter implements Navigator {
           this.spreads.appendChild(this.firstSpread);
           this.firstSpread.appendChild(this.iframes[0]);
           wrapper.appendChild(this.spreads);
+          let dir = "";
+          switch (this.settings.direction) {
+            case 0:
+              dir = "auto";
+              break;
+            case 1:
+              dir = "ltr";
+              break;
+            case 2:
+              dir = "rtl";
+              break;
+          }
+          this.setDirection(dir);
         } else {
           iframe.setAttribute("height", "100%");
           iframe.setAttribute("width", "100%");
